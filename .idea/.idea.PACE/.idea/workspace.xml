@@ -8,32 +8,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dfc5dbd4-95b1-42fa-8ad8-806e77d9be24" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/Debugging/FakeTelemetrySource.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/Services/SessionSnapshotPublisher.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/ViewModels/MainWindowViewModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Core/Interfaces/ILiveTelemetrySource.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Core/Interfaces/ISessionSnapshotPublisher.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Core/Models/SessionSnapshot.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Core/Models/TyreSetSnapshot.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Core/Models/TyreSnapshot.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/AssettoCorsaTelemetrySource.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Core/Interfaces/ITelemetryConnectionMonitor.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Core/Models/TelemetryConnectionState.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/AssettoCorsaSnapshotMapper.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/AcSessionType.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/AcStatus.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/GraphicsPageFile.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/MemoryMappedPageReader.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/PhysicsPageFile.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/StaticPageFile.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.PACE/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.PACE/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.AI/Pace.Engineer.AI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.AI/Pace.Engineer.AI.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.Analysis/Pace.Engineer.Analysis.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.Analysis/Pace.Engineer.Analysis.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/App.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/App.xaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/App.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/App.xaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/MainWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/MainWindow.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/MainWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/MainWindow.xaml.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/Pace.Engineer.App.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/Pace.Engineer.App.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.Core/Class1.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.Storage/Pace.Engineer.Storage.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.Storage/Pace.Engineer.Storage.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/Class1.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/ViewModels/MainWindowViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/ViewModels/MainWindowViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/AssettoCorsaTelemetrySource.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/AssettoCorsaTelemetrySource.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/Pace.Engineer.Telemetry.AssettoCorsa.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/Pace.Engineer.Telemetry.AssettoCorsa.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DpaMonitoringSettings">
+    <option name="firstShow" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
     <option name="cachedIndexableFilesCount" value="1" />
@@ -63,12 +60,20 @@
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core.Tests/UnitTest1.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core/Interfaces/ILiveTelemetrySource.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core/Interfaces/ISessionSnapshotPublisher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core/Interfaces/ITelemetryConnectionMonitor.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core/Models/SessionSnapshot.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core/Models/TelemetryConnectionState.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core/Models/TyreSetSnapshot.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core/Models/TyreSnapshot.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Storage/Class1.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa.Tests/UnitTest1.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/AssettoCorsaTelemetrySource.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/AcSessionType.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/AcStatus.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/GraphicsPageFile.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/MemoryMappedPageReader.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/PhysicsPageFile.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/StaticPageFile.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Voice/Class1.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="McpProjectServerCommands">
@@ -140,7 +145,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1776945401829</updated>
-      <workItem from="1776945403734" duration="1003000" />
+      <workItem from="1776945403734" duration="2702000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize solution with .NET 8 projects, WPF application, and unit test projects.">
       <option name="closed" value="true" />
@@ -150,7 +155,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776945882681</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Add telemetry streaming, session snapshot models, and WPF dashboard integration.">
+      <option name="closed" value="true" />
+      <created>1776946467067</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1776946467067</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -161,7 +174,8 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Initialize solution with .NET 8 projects, WPF application, and unit test projects." />
-    <option name="LAST_COMMIT_MESSAGE" value="Initialize solution with .NET 8 projects, WPF application, and unit test projects." />
+    <MESSAGE value="Add telemetry streaming, session snapshot models, and WPF dashboard integration." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add telemetry streaming, session snapshot models, and WPF dashboard integration." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

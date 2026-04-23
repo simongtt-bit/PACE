@@ -1,10 +1,10 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Pace.Engineer.App.Debugging;
 using Pace.Engineer.App.Services;
 using Pace.Engineer.App.ViewModels;
 using Pace.Engineer.Core.Interfaces;
+using Pace.Engineer.Telemetry.AssettoCorsa;
 
 namespace Pace.Engineer.App;
 
@@ -20,7 +20,14 @@ public partial class App : Application
         _host = Host.CreateDefaultBuilder()
             .ConfigureServices(services =>
             {
-                services.AddSingleton<ILiveTelemetrySource, FakeTelemetrySource>();
+                services.AddSingleton<AssettoCorsaTelemetrySource>();
+
+                services.AddSingleton<ILiveTelemetrySource>(sp =>
+                    sp.GetRequiredService<AssettoCorsaTelemetrySource>());
+
+                services.AddSingleton<ITelemetryConnectionMonitor>(sp =>
+                    sp.GetRequiredService<AssettoCorsaTelemetrySource>());
+
                 services.AddSingleton<ISessionSnapshotPublisher, SessionSnapshotPublisher>();
 
                 services.AddSingleton<MainWindowViewModel>();

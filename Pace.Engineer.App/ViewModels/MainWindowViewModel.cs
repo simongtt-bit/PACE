@@ -10,6 +10,7 @@ namespace Pace.Engineer.App.ViewModels;
 public sealed class MainWindowViewModel : INotifyPropertyChanged
 {
     private readonly ISessionSnapshotPublisher _publisher;
+    private readonly ITelemetryConnectionMonitor _connectionMonitor;
 
     private string _status = "Waiting for telemetry...";
     private string _simulator = "-";
@@ -34,10 +35,17 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     private double? _rearLeftTemp;
     private double? _rearRightTemp;
 
-    public MainWindowViewModel(ISessionSnapshotPublisher publisher)
+    public MainWindowViewModel(
+        ISessionSnapshotPublisher publisher,
+        ITelemetryConnectionMonitor connectionMonitor)
     {
         _publisher = publisher;
+        _connectionMonitor = connectionMonitor;
+
+        Status = connectionMonitor.Current.StatusMessage;
+
         _publisher.SnapshotReceived += OnSnapshotReceived;
+        _connectionMonitor.ConnectionStateChanged += OnConnectionStateChanged;
     }
 
     public ObservableCollection<string> Logs { get; } = [];
@@ -66,6 +74,20 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     public double? RearRightTemp { get => _rearRightTemp; set => SetField(ref _rearRightTemp, value); }
 
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void OnConnectionStateChanged(object? sender, TelemetryConnectionState state)
+    {
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            Status = state.StatusMessage;
+            Logs.Insert(0, $"{state.TimestampUtc:HH:mm:ss} | {state.StatusMessage}");
+
+            while (Logs.Count > 100)
+            {
+                Logs.RemoveAt(Logs.Count - 1);
+            }
+        });
+    }
 
     private void OnSnapshotReceived(object? sender, SessionSnapshot snapshot)
     {
