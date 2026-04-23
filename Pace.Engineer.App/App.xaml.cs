@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Pace.Engineer.Analysis.Services;
 using Pace.Engineer.App.Services;
 using Pace.Engineer.App.ViewModels;
 using Pace.Engineer.Core.Interfaces;
@@ -29,6 +30,11 @@ public partial class App : Application
                     sp.GetRequiredService<AssettoCorsaTelemetrySource>());
 
                 services.AddSingleton<ISessionSnapshotPublisher, SessionSnapshotPublisher>();
+
+                services.AddSingleton<FuelProjectionService>();
+                services.AddSingleton<TyreAnalysisService>();
+                services.AddSingleton<PaceAnalysisService>();
+                services.AddSingleton<EngineerService>();
 
                 services.AddSingleton<MainWindowViewModel>();
                 services.AddSingleton<MainWindow>();

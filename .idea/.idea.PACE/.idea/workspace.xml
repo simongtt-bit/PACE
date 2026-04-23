@@ -8,21 +8,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dfc5dbd4-95b1-42fa-8ad8-806e77d9be24" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Core/Interfaces/ITelemetryConnectionMonitor.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Core/Models/TelemetryConnectionState.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/AssettoCorsaSnapshotMapper.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/AcSessionType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/AcStatus.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/GraphicsPageFile.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/MemoryMappedPageReader.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/PhysicsPageFile.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/SharedMemory/StaticPageFile.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Analysis/Services/EngineerService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Analysis/Services/FuelProjectionService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Analysis/Services/PaceAnalysisService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Analysis/Services/TyreAnalysisService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/ViewModels/RelayCommand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Core/Models/EngineerQuestionType.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.Core/Models/EngineerResponse.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.PACE/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.PACE/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pace.Engineer.Analysis/Class1.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/App.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/App.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/MainWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/MainWindow.xaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/Pace.Engineer.App.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/Pace.Engineer.App.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/ViewModels/MainWindowViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/ViewModels/MainWindowViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/AssettoCorsaTelemetrySource.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/AssettoCorsaTelemetrySource.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/Pace.Engineer.Telemetry.AssettoCorsa.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.Telemetry.AssettoCorsa/Pace.Engineer.Telemetry.AssettoCorsa.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,14 +51,20 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.AI/Class1.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Analysis.Tests/UnitTest1.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Pace.Engineer.Analysis/Class1.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.Analysis/Services/EngineerService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.Analysis/Services/FuelProjectionService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.Analysis/Services/PaceAnalysisService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.Analysis/Services/TyreAnalysisService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/Debugging/FakeTelemetrySource.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/Services/SessionSnapshotPublisher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/ViewModels/MainWindowViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/ViewModels/RelayCommand.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core.Tests/UnitTest1.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core/Interfaces/ILiveTelemetrySource.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core/Interfaces/ISessionSnapshotPublisher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core/Interfaces/ITelemetryConnectionMonitor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core/Models/EngineerQuestionType.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core/Models/EngineerResponse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core/Models/SessionSnapshot.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core/Models/TelemetryConnectionState.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core/Models/TyreSetSnapshot.cs" root0="FORCE_HIGHLIGHTING" />
@@ -145,7 +149,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1776945401829</updated>
-      <workItem from="1776945403734" duration="2702000" />
+      <workItem from="1776945403734" duration="3887000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize solution with .NET 8 projects, WPF application, and unit test projects.">
       <option name="closed" value="true" />
@@ -163,7 +167,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776946467067</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Introduce Assetto Corsa telemetry integration with shared memory handling and connection monitoring.">
+      <option name="closed" value="true" />
+      <created>1776948171803</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1776948171803</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -175,7 +187,8 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Initialize solution with .NET 8 projects, WPF application, and unit test projects." />
     <MESSAGE value="Add telemetry streaming, session snapshot models, and WPF dashboard integration." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add telemetry streaming, session snapshot models, and WPF dashboard integration." />
+    <MESSAGE value="Introduce Assetto Corsa telemetry integration with shared memory handling and connection monitoring." />
+    <option name="LAST_COMMIT_MESSAGE" value="Introduce Assetto Corsa telemetry integration with shared memory handling and connection monitoring." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

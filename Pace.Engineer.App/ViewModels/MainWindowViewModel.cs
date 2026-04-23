@@ -2,6 +2,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Input;
+using Pace.Engineer.Analysis.Services;
+using Pace.Engineer.App.Services;
 using Pace.Engineer.Core.Interfaces;
 using Pace.Engineer.Core.Models;
 
@@ -11,6 +14,13 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
 {
     private readonly ISessionSnapshotPublisher _publisher;
     private readonly ITelemetryConnectionMonitor _connectionMonitor;
+    private readonly EngineerService _engineerService;
+    private readonly FuelProjectionService _fuelProjectionService;
+    private readonly PaceAnalysisService _paceAnalysisService;
+
+    private SessionSnapshot? _currentSnapshot;
+    private int _lastProcessedLapNumber;
+    private double? _lastLapFuelAtStart;
 
     private string _status = "Waiting for telemetry...";
     private string _simulator = "-";
@@ -34,15 +44,27 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     private double? _frontRightTemp;
     private double? _rearLeftTemp;
     private double? _rearRightTemp;
+    private string _engineerResponse = "PACE standing by.";
 
     public MainWindowViewModel(
         ISessionSnapshotPublisher publisher,
-        ITelemetryConnectionMonitor connectionMonitor)
+        ITelemetryConnectionMonitor connectionMonitor,
+        EngineerService engineerService,
+        FuelProjectionService fuelProjectionService,
+        PaceAnalysisService paceAnalysisService)
     {
         _publisher = publisher;
         _connectionMonitor = connectionMonitor;
+        _engineerService = engineerService;
+        _fuelProjectionService = fuelProjectionService;
+        _paceAnalysisService = paceAnalysisService;
 
         Status = connectionMonitor.Current.StatusMessage;
+
+        AskFuelCommand = new RelayCommand(_ => AskQuestion(EngineerQuestionType.Fuel));
+        AskTyresCommand = new RelayCommand(_ => AskQuestion(EngineerQuestionType.Tyres));
+        AskPaceCommand = new RelayCommand(_ => AskQuestion(EngineerQuestionType.Pace));
+        AskCompareToBestCommand = new RelayCommand(_ => AskQuestion(EngineerQuestionType.CompareToBest));
 
         _publisher.SnapshotReceived += OnSnapshotReceived;
         _connectionMonitor.ConnectionStateChanged += OnConnectionStateChanged;
@@ -72,8 +94,23 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     public double? FrontRightTemp { get => _frontRightTemp; set => SetField(ref _frontRightTemp, value); }
     public double? RearLeftTemp { get => _rearLeftTemp; set => SetField(ref _rearLeftTemp, value); }
     public double? RearRightTemp { get => _rearRightTemp; set => SetField(ref _rearRightTemp, value); }
+    public string EngineerResponse { get => _engineerResponse; set => SetField(ref _engineerResponse, value); }
+
+    public ICommand AskFuelCommand { get; }
+    public ICommand AskTyresCommand { get; }
+    public ICommand AskPaceCommand { get; }
+    public ICommand AskCompareToBestCommand { get; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void AskQuestion(EngineerQuestionType questionType)
+    {
+        var response = _engineerService.Answer(_currentSnapshot, questionType);
+        EngineerResponse = response.Message;
+
+        Logs.Insert(0, $"{response.TimestampUtc:HH:mm:ss} | PACE | {response.Message}");
+        TrimLogs();
+    }
 
     private void OnConnectionStateChanged(object? sender, TelemetryConnectionState state)
     {
@@ -81,11 +118,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         {
             Status = state.StatusMessage;
             Logs.Insert(0, $"{state.TimestampUtc:HH:mm:ss} | {state.StatusMessage}");
-
-            while (Logs.Count > 100)
-            {
-                Logs.RemoveAt(Logs.Count - 1);
-            }
+            TrimLogs();
         });
     }
 
@@ -93,6 +126,10 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
+            ProcessLapTransitions(snapshot);
+
+            _currentSnapshot = snapshot;
+
             Status = $"Connected via {snapshot.TelemetrySource}";
             Simulator = snapshot.Simulator;
             TrackName = snapshot.TrackName;
@@ -119,11 +156,78 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
             Logs.Insert(0,
                 $"{snapshot.TimestampUtc:HH:mm:ss} | Lap {snapshot.LapNumber} | S{snapshot.SectorNumber} | {snapshot.SpeedKph:F0} kph");
 
-            while (Logs.Count > 100)
-            {
-                Logs.RemoveAt(Logs.Count - 1);
-            }
+            TrimLogs();
         });
+    }
+
+    private void ProcessLapTransitions(SessionSnapshot snapshot)
+    {
+        if (_lastProcessedLapNumber == 0)
+        {
+            _lastProcessedLapNumber = snapshot.LapNumber;
+            _lastLapFuelAtStart = snapshot.FuelLitresRemaining;
+            return;
+        }
+
+        if (snapshot.LapNumber <= _lastProcessedLapNumber)
+        {
+            return;
+        }
+
+        if (_lastLapFuelAtStart.HasValue)
+        {
+            var litresUsed = _lastLapFuelAtStart.Value - snapshot.FuelLitresRemaining;
+
+            if (litresUsed > 0)
+            {
+                _fuelProjectionService.RecordLapConsumption(litresUsed);
+            }
+        }
+
+        if (snapshot.LastLapTime.HasValue)
+        {
+            _paceAnalysisService.RecordLap(snapshot.LastLapTime.Value);
+        }
+
+        var estimated = _fuelProjectionService.EstimateLapsRemaining(snapshot.FuelLitresRemaining);
+
+        _currentSnapshot = new SessionSnapshot
+        {
+            TimestampUtc = snapshot.TimestampUtc,
+            Simulator = snapshot.Simulator,
+            SessionType = snapshot.SessionType,
+            TrackName = snapshot.TrackName,
+            CarName = snapshot.CarName,
+            LapNumber = snapshot.LapNumber,
+            SectorNumber = snapshot.SectorNumber,
+            CurrentLapTime = snapshot.CurrentLapTime,
+            LastLapTime = snapshot.LastLapTime,
+            BestLapTime = snapshot.BestLapTime,
+            DeltaToBest = snapshot.DeltaToBest,
+            SpeedKph = snapshot.SpeedKph,
+            ThrottlePercent = snapshot.ThrottlePercent,
+            BrakePercent = snapshot.BrakePercent,
+            Gear = snapshot.Gear,
+            Rpm = snapshot.Rpm,
+            FuelLitresRemaining = snapshot.FuelLitresRemaining,
+            EstimatedLapsRemaining = estimated,
+            Tyres = snapshot.Tyres,
+            IsInPitLane = snapshot.IsInPitLane,
+            IsOnTrack = snapshot.IsOnTrack,
+            IsValidLap = snapshot.IsValidLap,
+            TelemetrySource = snapshot.TelemetrySource
+        };
+
+        _lastProcessedLapNumber = snapshot.LapNumber;
+        _lastLapFuelAtStart = snapshot.FuelLitresRemaining;
+    }
+
+    private void TrimLogs()
+    {
+        while (Logs.Count > 200)
+        {
+            Logs.RemoveAt(Logs.Count - 1);
+        }
     }
 
     private static string FormatLapTime(TimeSpan? value)
