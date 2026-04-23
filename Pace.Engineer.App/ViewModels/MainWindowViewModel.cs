@@ -45,6 +45,9 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     private double? _rearLeftTemp;
     private double? _rearRightTemp;
     private string _engineerResponse = "PACE standing by.";
+    private string _lastQuestionAsked = "-";
+    private string _responseTimestamp = "-";
+    private string _responseSeverity = "Info";
 
     public MainWindowViewModel(
         ISessionSnapshotPublisher publisher,
@@ -214,13 +217,29 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     public ICommand AskTyresCommand { get; }
     public ICommand AskPaceCommand { get; }
     public ICommand AskCompareToBestCommand { get; }
+    public string LastQuestionAsked { get => _lastQuestionAsked; set => SetField(ref _lastQuestionAsked, value); }
+    public string ResponseTimestamp { get => _responseTimestamp; set => SetField(ref _responseTimestamp, value); }
+    public string ResponseSeverity { get => _responseSeverity; set => SetField(ref _responseSeverity, value); }
+    public string ResponseBadgeText => ResponseSeverity;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private void AskQuestion(EngineerQuestionType questionType)
     {
         var response = _engineerService.Answer(_currentSnapshot, questionType);
+
+        LastQuestionAsked = questionType switch
+        {
+            EngineerQuestionType.Fuel => "How's fuel?",
+            EngineerQuestionType.Tyres => "How are the tyres?",
+            EngineerQuestionType.Pace => "Am I improving?",
+            EngineerQuestionType.CompareToBest => "Compare to best lap",
+            _ => questionType.ToString()
+        };
+
         EngineerResponse = response.Message;
+        ResponseTimestamp = response.TimestampUtc.ToLocalTime().ToString("HH:mm:ss");
+        ResponseSeverity = InferSeverity(response.Message);
 
         Logs.Insert(0, $"{response.TimestampUtc:HH:mm:ss} | PACE | {response.Message}");
         TrimLogs();
@@ -242,7 +261,45 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         {
             ProcessLapTransitions(snapshot);
 
-            _currentSnapshot = snapshot;
+            _currentSnapshot ??= snapshot;
+
+            if (_currentSnapshot is not null && _currentSnapshot.LapNumber != snapshot.LapNumber)
+            {
+                _currentSnapshot = snapshot;
+            }
+            else if (_currentSnapshot is null)
+            {
+                _currentSnapshot = snapshot;
+            }
+            else
+            {
+                _currentSnapshot = new SessionSnapshot
+                {
+                    TimestampUtc = snapshot.TimestampUtc,
+                    Simulator = snapshot.Simulator,
+                    SessionType = snapshot.SessionType,
+                    TrackName = snapshot.TrackName,
+                    CarName = snapshot.CarName,
+                    LapNumber = snapshot.LapNumber,
+                    SectorNumber = snapshot.SectorNumber,
+                    CurrentLapTime = snapshot.CurrentLapTime,
+                    LastLapTime = snapshot.LastLapTime,
+                    BestLapTime = snapshot.BestLapTime,
+                    DeltaToBest = snapshot.DeltaToBest,
+                    SpeedKph = snapshot.SpeedKph,
+                    ThrottlePercent = snapshot.ThrottlePercent,
+                    BrakePercent = snapshot.BrakePercent,
+                    Gear = snapshot.Gear,
+                    Rpm = snapshot.Rpm,
+                    FuelLitresRemaining = snapshot.FuelLitresRemaining,
+                    EstimatedLapsRemaining = _currentSnapshot.EstimatedLapsRemaining,
+                    Tyres = snapshot.Tyres,
+                    IsInPitLane = snapshot.IsInPitLane,
+                    IsOnTrack = snapshot.IsOnTrack,
+                    IsValidLap = snapshot.IsValidLap,
+                    TelemetrySource = snapshot.TelemetrySource
+                };
+            }
 
             Status = $"Connected via {snapshot.TelemetrySource}";
             Simulator = snapshot.Simulator;
@@ -392,5 +449,22 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
 
         field = value;
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+    
+    private static string InferSeverity(string message)
+    {
+        var text = message.ToLowerInvariant();
+
+        if (text.Contains("critical") || text.Contains("box soon"))
+        {
+            return "Warning";
+        }
+
+        if (text.Contains("tight"))
+        {
+            return "Caution";
+        }
+
+        return "Info";
     }
 }

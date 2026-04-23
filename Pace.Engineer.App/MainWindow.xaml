@@ -96,7 +96,8 @@
                     <Border Margin="0,0,8,0" Padding="12" Background="#FFEAF4FF" CornerRadius="8">
                         <StackPanel>
                             <TextBlock Text="Speed" FontWeight="Bold" />
-                            <TextBlock Text="{Binding SpeedKph, StringFormat={}{0:F0} kph}" FontSize="28" FontWeight="Bold" />
+                            <TextBlock Text="{Binding SpeedKph, StringFormat={}{0:F0} kph}" FontSize="28"
+                                       FontWeight="Bold" />
                         </StackPanel>
                     </Border>
 
@@ -148,20 +149,27 @@
                     <Border Grid.Column="0" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
                         <StackPanel>
                             <TextBlock Text="Car State" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
-                            <TextBlock Text="{Binding ThrottlePercent, StringFormat=Throttle: {0:F0}%}" FontSize="16" Margin="0,0,0,6" />
-                            <TextBlock Text="{Binding BrakePercent, StringFormat=Brake: {0:F0}%}" FontSize="16" Margin="0,0,0,6" />
+                            <TextBlock Text="{Binding ThrottlePercent, StringFormat=Throttle: {0:F0}%}" FontSize="16"
+                                       Margin="0,0,0,6" />
+                            <TextBlock Text="{Binding BrakePercent, StringFormat=Brake: {0:F0}%}" FontSize="16"
+                                       Margin="0,0,0,6" />
                             <TextBlock Text="{Binding Rpm, StringFormat=RPM: {0:F0}}" FontSize="16" Margin="0,0,0,6" />
-                            <TextBlock Text="{Binding FuelLitres, StringFormat=Fuel: {0:F1} L}" FontSize="16" Margin="0,0,0,6" />
-                            <TextBlock Text="{Binding LapsRemaining, StringFormat=Estimated laps remaining: {0:F1}}" FontSize="16" />
+                            <TextBlock Text="{Binding FuelLitres, StringFormat=Fuel: {0:F1} L}" FontSize="16"
+                                       Margin="0,0,0,6" />
+                            <TextBlock Text="{Binding LapsRemaining, StringFormat=Estimated laps remaining: {0:F1}}"
+                                       FontSize="16" />
                         </StackPanel>
                     </Border>
 
                     <Border Grid.Column="2" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
                         <StackPanel>
                             <TextBlock Text="Tyre Temperatures" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
-                            <TextBlock Text="{Binding FrontLeftTemp, StringFormat=Front Left: {0:F1} °C}" FontSize="16" Margin="0,0,0,6" />
-                            <TextBlock Text="{Binding FrontRightTemp, StringFormat=Front Right: {0:F1} °C}" FontSize="16" Margin="0,0,0,6" />
-                            <TextBlock Text="{Binding RearLeftTemp, StringFormat=Rear Left: {0:F1} °C}" FontSize="16" Margin="0,0,0,6" />
+                            <TextBlock Text="{Binding FrontLeftTemp, StringFormat=Front Left: {0:F1} °C}" FontSize="16"
+                                       Margin="0,0,0,6" />
+                            <TextBlock Text="{Binding FrontRightTemp, StringFormat=Front Right: {0:F1} °C}"
+                                       FontSize="16" Margin="0,0,0,6" />
+                            <TextBlock Text="{Binding RearLeftTemp, StringFormat=Rear Left: {0:F1} °C}" FontSize="16"
+                                       Margin="0,0,0,6" />
                             <TextBlock Text="{Binding RearRightTemp, StringFormat=Rear Right: {0:F1} °C}" FontSize="16" />
                         </StackPanel>
                     </Border>
@@ -194,9 +202,31 @@
                         </WrapPanel>
 
                         <Border Background="White" CornerRadius="6" Padding="12">
-                            <TextBlock Text="{Binding EngineerResponse}"
-                                       FontSize="16"
-                                       TextWrapping="Wrap" />
+                            <StackPanel>
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Text="{Binding LastQuestionAsked}"
+                                               FontWeight="SemiBold"
+                                               FontSize="14"
+                                               DockPanel.Dock="Left" />
+                                    <TextBlock Text="{Binding ResponseTimestamp}"
+                                               HorizontalAlignment="Right"
+                                               Foreground="#666666" />
+                                </DockPanel>
+
+                                <TextBlock Text="{Binding EngineerResponse}"
+                                           FontSize="16"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,8" />
+
+                                <Border Background="#FFEAF4FF"
+                                        CornerRadius="4"
+                                        Padding="8,4"
+                                        HorizontalAlignment="Left">
+                                    <TextBlock Text="{Binding ResponseBadgeText}"
+                                               FontSize="12"
+                                               FontWeight="SemiBold" />
+                                </Border>
+                            </StackPanel>
                         </Border>
                     </StackPanel>
                 </Border>
