@@ -8,10 +8,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dfc5dbd4-95b1-42fa-8ad8-806e77d9be24" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/appsettings.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/Services/EngineerClip.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/Services/EngineerClipMappings.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/Services/IVoiceClipService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/Services/VoiceClipLibrary.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/Services/VoiceClipService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.PACE/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.PACE/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/App.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/App.xaml.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/Pace.Engineer.App.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/Pace.Engineer.App.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/Services/SpeechService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/Services/SpeechService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/Services/AzureSpeechOptions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/Services/SpeechService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/ViewModels/MainWindowViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/ViewModels/MainWindowViewModel.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,9 +63,12 @@
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Analysis/Services/PaceAnalysisService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Analysis/Services/TyreAnalysisService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/Debugging/FakeTelemetrySource.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/Services/AzureSpeechOptions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/Services/EngineerClip.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/Services/EngineerClipMappings.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/Services/IVoiceClipService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/Services/SessionSnapshotPublisher.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/Services/SpeechService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/Services/VoiceClipLibrary.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/Services/VoiceClipService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/ViewModels/MainWindowViewModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/ViewModels/RelayCommand.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core.Tests/UnitTest1.cs" root0="FORCE_HIGHLIGHTING" />
@@ -152,7 +162,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1776945401829</updated>
-      <workItem from="1776945403734" duration="8396000" />
+      <workItem from="1776945403734" duration="14528000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize solution with .NET 8 projects, WPF application, and unit test projects.">
       <option name="closed" value="true" />
@@ -210,7 +220,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776957880250</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Refactor speech synthesis service to include audio stream playback with radio effect and improve text normalization. Update WPF to enhance speech output handling.">
+      <option name="closed" value="true" />
+      <created>1776958571376</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1776958571376</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -227,7 +245,8 @@
     <MESSAGE value="Refactor WPF view models, improve telemetry log updates, and enhance lap comparison messaging." />
     <MESSAGE value="Enhance WPF UI with engineer question context, response details, and severity indicators; refine session snapshot handling." />
     <MESSAGE value="Add Azure Cognitive Services speech integration, enhance tyre analysis responses, and implement WPF UI speech output." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add Azure Cognitive Services speech integration, enhance tyre analysis responses, and implement WPF UI speech output." />
+    <MESSAGE value="Refactor speech synthesis service to include audio stream playback with radio effect and improve text normalization. Update WPF to enhance speech output handling." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor speech synthesis service to include audio stream playback with radio effect and improve text normalization. Update WPF to enhance speech output handling." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -244,6 +263,32 @@
           <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
           <option name="timeStamp" value="3" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Pace.Engineer.Analysis/Services/EngineerService.cs</url>
+          <line>32</line>
+          <properties documentPath="C:\Users\Simon\RiderProjects\PACE\Pace.Engineer.Analysis\Services\EngineerService.cs" containingFunctionPresentation="Method 'Answer'">
+            <startOffsets>
+              <option value="1048" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1584" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Pace.Engineer.App/ViewModels/MainWindowViewModel.cs</url>
+          <line>275</line>
+          <properties documentPath="C:\Users\Simon\RiderProjects\PACE\Pace.Engineer.App\ViewModels\MainWindowViewModel.cs" containingFunctionPresentation="Method 'AskQuestion'">
+            <startOffsets>
+              <option value="7368" />
+            </startOffsets>
+            <endOffsets>
+              <option value="7439" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

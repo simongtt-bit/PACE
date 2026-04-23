@@ -20,18 +20,8 @@ public partial class App : Application
         base.OnStartup(e);
 
         _host = Host.CreateDefaultBuilder()
-            .ConfigureAppConfiguration((hostingContext, config) =>
-            {
-                config.Sources.Clear();
-                config.SetBasePath(AppContext.BaseDirectory);
-                config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
-                config.AddEnvironmentVariables();
-            })
             .ConfigureServices((context, services) =>
             {
-                services.Configure<AzureSpeechOptions>(
-                    context.Configuration.GetSection("AzureSpeech"));
-
                 services.AddSingleton<AssettoCorsaTelemetrySource>();
 
                 services.AddSingleton<ILiveTelemetrySource>(sp =>
@@ -46,7 +36,7 @@ public partial class App : Application
                 services.AddSingleton<TyreAnalysisService>();
                 services.AddSingleton<PaceAnalysisService>();
                 services.AddSingleton<EngineerService>();
-                services.AddSingleton<SpeechService>();
+                services.AddSingleton<IVoiceClipService, VoiceClipService>();
 
                 services.AddSingleton<MainWindowViewModel>();
                 services.AddSingleton<MainWindow>();

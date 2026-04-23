@@ -23,9 +23,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="appsettings.json">
+        <Content Include="Assets\Voice\**\*.*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Assets\Voice\" />
     </ItemGroup>
 
 </Project>

@@ -17,7 +17,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     private readonly EngineerService _engineerService;
     private readonly FuelProjectionService _fuelProjectionService;
     private readonly PaceAnalysisService _paceAnalysisService;
-    private readonly SpeechService _speechService;
+    private readonly IVoiceClipService _voiceClipService;
 
     private SessionSnapshot? _currentSnapshot;
     private int _lastProcessedLapNumber;
@@ -55,14 +55,15 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         ITelemetryConnectionMonitor connectionMonitor,
         EngineerService engineerService,
         FuelProjectionService fuelProjectionService,
-        PaceAnalysisService paceAnalysisService, SpeechService speechService)
+        PaceAnalysisService paceAnalysisService,
+        IVoiceClipService voiceClipService)
     {
         _publisher = publisher;
         _connectionMonitor = connectionMonitor;
         _engineerService = engineerService;
         _fuelProjectionService = fuelProjectionService;
         _paceAnalysisService = paceAnalysisService;
-        _speechService = speechService;
+        _voiceClipService = voiceClipService;
 
         Status = connectionMonitor.Current.StatusMessage;
 
@@ -219,34 +220,240 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     public ICommand AskTyresCommand { get; }
     public ICommand AskPaceCommand { get; }
     public ICommand AskCompareToBestCommand { get; }
-    public string LastQuestionAsked { get => _lastQuestionAsked; set => SetField(ref _lastQuestionAsked, value); }
-    public string ResponseTimestamp { get => _responseTimestamp; set => SetField(ref _responseTimestamp, value); }
-    public string ResponseSeverity { get => _responseSeverity; set => SetField(ref _responseSeverity, value); }
+
+    public string LastQuestionAsked
+    {
+        get => _lastQuestionAsked;
+        set => SetField(ref _lastQuestionAsked, value);
+    }
+
+    public string ResponseTimestamp
+    {
+        get => _responseTimestamp;
+        set => SetField(ref _responseTimestamp, value);
+    }
+
+    public string ResponseSeverity
+    {
+        get => _responseSeverity;
+        set => SetField(ref _responseSeverity, value);
+    }
+
     public string ResponseBadgeText => ResponseSeverity;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    private async void AskQuestion(EngineerQuestionType questionType)
+    private async Task TestEngineerClipAsync()
     {
-        var response = _engineerService.Answer(_currentSnapshot, questionType);
-
-        LastQuestionAsked = questionType switch
+        var clips = new[]
         {
-            EngineerQuestionType.Fuel => "How's fuel?",
-            EngineerQuestionType.Tyres => "How are the tyres?",
-            EngineerQuestionType.Pace => "Am I improving?",
-            EngineerQuestionType.CompareToBest => "Compare to best lap",
-            _ => questionType.ToString()
+            EngineerClip.RadioCheck,
+            EngineerClip.AcknowledgeOk,
+            EngineerClip.LowBattery,
+            EngineerClip.FuelWillBeTight,
+            EngineerClip.YellowFlag,
+            EngineerClip.NoDamage,
+            EngineerClip.HotOil
         };
 
-        EngineerResponse = response.Message;
-        ResponseTimestamp = response.TimestampUtc.ToLocalTime().ToString("HH:mm:ss");
-        ResponseSeverity = InferSeverity(response.Message);
+        foreach (var clip in clips)
+        {
+            if (_voiceClipService.HasClip(clip))
+            {
+                await _voiceClipService.PlayAsync(clip);
+                await Task.Delay(400);
+            }
+        }
+    }
 
-        Logs.Insert(0, $"{response.TimestampUtc:HH:mm:ss} | PACE | {response.Message}");
-        TrimLogs();
+    private async void AskQuestion(EngineerQuestionType questionType)
+    {
+        try
+        {
+            LastQuestionAsked = questionType.ToString();
 
-        await _speechService.SpeakAsync(response.Message);
+            await TestEngineerClipAsync();
+            var response = _engineerService.Answer(_currentSnapshot, questionType);
+
+            EngineerResponse = response.Message;
+            ResponseSeverity = InferSeverity(response.Message);
+            ResponseTimestamp = response.TimestampUtc.ToLocalTime().ToString("HH:mm:ss");
+
+            Logs.Insert(0, $"{DateTime.Now:HH:mm:ss} | {questionType} | {response.Message}");
+            TrimLogs();
+
+            await PlayResponseAudioAsync(questionType, response.Message);
+        }
+        catch (Exception ex)
+        {
+            EngineerResponse = "Audio playback failed.";
+            ResponseSeverity = "Warning";
+            ResponseTimestamp = DateTime.Now.ToString("HH:mm:ss");
+            Logs.Insert(0, $"{DateTime.Now:HH:mm:ss} | Error | {ex.Message}");
+            TrimLogs();
+        }
+    }
+
+    private async Task PlayResponseAudioAsync(EngineerQuestionType questionType, string message)
+    {
+        var clip = ResolveClip(questionType, message);
+
+        if (clip.HasValue && _voiceClipService.HasClip(clip.Value))
+        {
+            await _voiceClipService.PlayAsync(clip.Value);
+            
+        }
+    }
+
+    private static EngineerClip? ResolveClip(EngineerQuestionType questionType, string message)
+    {
+        var text = message.ToLowerInvariant();
+
+        if (text.Contains("radio check"))
+        {
+            return EngineerClip.RadioCheck;
+        }
+
+        if (text.Contains("fill the tank"))
+        {
+            return EngineerClip.FillTheTank;
+        }
+
+        if (text.Contains("fuel to end"))
+        {
+            return EngineerClip.FuelToEnd;
+        }
+
+        if (text.Contains("fuel is critical"))
+        {
+            return EngineerClip.FuelCriticalBoxThisLap;
+        }
+        
+        if (text.Contains("plenty of fuel"))
+        {
+            return EngineerClip.PlentyOfFuel;
+        }
+
+        if (text.Contains("fuel is getting tight") || text.Contains("fuel is tight"))
+        {
+            return EngineerClip.FuelWillBeTight;
+        }
+
+        if (text.Contains("fuel looks good"))
+        {
+            return EngineerClip.FuelShouldBeOk;
+        }
+
+        if (text.Contains("yellow flag"))
+        {
+            return EngineerClip.YellowFlag;
+        }
+
+        if (text.Contains("local yellow"))
+        {
+            return EngineerClip.LocalYellowAhead;
+        }
+
+        if (text.Contains("blue flag"))
+        {
+            return EngineerClip.BlueFlag;
+        }
+
+        if (text.Contains("black flag"))
+        {
+            return EngineerClip.BlackFlag;
+        }
+
+        if (text.Contains("clear to overtake"))
+        {
+            return EngineerClip.ClearToOvertake;
+        }
+
+        if (text.Contains("no damage"))
+        {
+            return EngineerClip.NoDamage;
+        }
+
+        if (text.Contains("left front puncture"))
+        {
+            return EngineerClip.LeftFrontPuncture;
+        }
+
+        if (text.Contains("right front puncture"))
+        {
+            return EngineerClip.RightFrontPuncture;
+        }
+
+        if (text.Contains("left rear puncture"))
+        {
+            return EngineerClip.LeftRearPuncture;
+        }
+
+        if (text.Contains("right rear puncture"))
+        {
+            return EngineerClip.RightRearPuncture;
+        }
+
+        if (text.Contains("minor aero damage"))
+        {
+            return EngineerClip.MinorAeroDamage;
+        }
+
+        if (text.Contains("severe aero damage"))
+        {
+            return EngineerClip.SevereAeroDamage;
+        }
+
+        if (text.Contains("busted engine"))
+        {
+            return EngineerClip.BustedEngine;
+        }
+
+        if (text.Contains("busted suspension"))
+        {
+            return EngineerClip.BustedSuspension;
+        }
+
+        if (text.Contains("busted transmission"))
+        {
+            return EngineerClip.BustedTransmission;
+        }
+
+        if (text.Contains("hot oil and water"))
+        {
+            return EngineerClip.HotOilAndWater;
+        }
+
+        if (text.Contains("hot oil"))
+        {
+            return EngineerClip.HotOil;
+        }
+
+        if (text.Contains("hot water"))
+        {
+            return EngineerClip.HotWater;
+        }
+
+        if (text.Contains("low fuel pressure"))
+        {
+            return EngineerClip.LowFuelPressure;
+        }
+
+        if (text.Contains("low oil pressure"))
+        {
+            return EngineerClip.LowOilPressure;
+        }
+
+        if (text.Contains("stalled"))
+        {
+            return EngineerClip.Stalled;
+        }
+
+        return questionType switch
+        {
+            EngineerQuestionType.Fuel when text.Contains("not enough data") => EngineerClip.StandBy,
+            _ => null
+        };
     }
 
     private void OnConnectionStateChanged(object? sender, TelemetryConnectionState state)
@@ -454,7 +661,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         field = value;
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-    
+
     private static string InferSeverity(string message)
     {
         var text = message.ToLowerInvariant();
