@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Pace.Engineer.Analysis\Pace.Engineer.Analysis.csproj" />
+      <ProjectReference Include="..\Pace.Engineer.Core\Pace.Engineer.Core.csproj" />
+    </ItemGroup>
+
 </Project>
