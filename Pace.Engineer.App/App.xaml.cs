@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pace.Engineer.Analysis.Services;
@@ -19,8 +20,18 @@ public partial class App : Application
         base.OnStartup(e);
 
         _host = Host.CreateDefaultBuilder()
-            .ConfigureServices(services =>
+            .ConfigureAppConfiguration((hostingContext, config) =>
             {
+                config.Sources.Clear();
+                config.SetBasePath(AppContext.BaseDirectory);
+                config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
+                config.AddEnvironmentVariables();
+            })
+            .ConfigureServices((context, services) =>
+            {
+                services.Configure<AzureSpeechOptions>(
+                    context.Configuration.GetSection("AzureSpeech"));
+
                 services.AddSingleton<AssettoCorsaTelemetrySource>();
 
                 services.AddSingleton<ILiveTelemetrySource>(sp =>
@@ -35,6 +46,7 @@ public partial class App : Application
                 services.AddSingleton<TyreAnalysisService>();
                 services.AddSingleton<PaceAnalysisService>();
                 services.AddSingleton<EngineerService>();
+                services.AddSingleton<SpeechService>();
 
                 services.AddSingleton<MainWindowViewModel>();
                 services.AddSingleton<MainWindow>();
@@ -47,7 +59,6 @@ public partial class App : Application
         var publisher = _host.Services.GetRequiredService<ISessionSnapshotPublisher>();
 
         _telemetryCancellationTokenSource = new CancellationTokenSource();
-
         _ = Task.Run(() => publisher.StartAsync(_telemetryCancellationTokenSource.Token));
 
         mainWindow.Show();

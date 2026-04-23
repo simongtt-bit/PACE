@@ -17,6 +17,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     private readonly EngineerService _engineerService;
     private readonly FuelProjectionService _fuelProjectionService;
     private readonly PaceAnalysisService _paceAnalysisService;
+    private readonly SpeechService _speechService;
 
     private SessionSnapshot? _currentSnapshot;
     private int _lastProcessedLapNumber;
@@ -54,13 +55,14 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         ITelemetryConnectionMonitor connectionMonitor,
         EngineerService engineerService,
         FuelProjectionService fuelProjectionService,
-        PaceAnalysisService paceAnalysisService)
+        PaceAnalysisService paceAnalysisService, SpeechService speechService)
     {
         _publisher = publisher;
         _connectionMonitor = connectionMonitor;
         _engineerService = engineerService;
         _fuelProjectionService = fuelProjectionService;
         _paceAnalysisService = paceAnalysisService;
+        _speechService = speechService;
 
         Status = connectionMonitor.Current.StatusMessage;
 
@@ -224,7 +226,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    private void AskQuestion(EngineerQuestionType questionType)
+    private async Task AskQuestion(EngineerQuestionType questionType)
     {
         var response = _engineerService.Answer(_currentSnapshot, questionType);
 
@@ -240,6 +242,8 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         EngineerResponse = response.Message;
         ResponseTimestamp = response.TimestampUtc.ToLocalTime().ToString("HH:mm:ss");
         ResponseSeverity = InferSeverity(response.Message);
+
+        await _speechService.SpeakAsync(response.Message);
 
         Logs.Insert(0, $"{response.TimestampUtc:HH:mm:ss} | PACE | {response.Message}");
         TrimLogs();

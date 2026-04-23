@@ -1,7 +1,6 @@
-using Pace.Engineer.Analysis.Services;
 using Pace.Engineer.Core.Models;
 
-namespace Pace.Engineer.App.Services;
+namespace Pace.Engineer.Analysis.Services;
 
 public sealed class EngineerService
 {
@@ -59,14 +58,14 @@ public sealed class EngineerService
 
         if (lapsRemaining < 2)
         {
-            return $"Fuel is critical. Roughly {lapsRemaining.Value:F1} laps remaining.";
+            return $"Fuel is critical. Box this lap.";
         }
 
         if (lapsRemaining < 5)
         {
-            return $"Fuel is getting tight. Roughly {lapsRemaining.Value:F1} laps remaining.";
+            return $"Fuel is getting tight. You’ve got about {lapsRemaining.Value:F1} laps.";
         }
 
-        return $"Fuel is fine. Roughly {lapsRemaining.Value:F1} laps remaining.";
+        return $"Fuel looks good. You’ve got about {lapsRemaining.Value:F1} laps left.";
     }
 }

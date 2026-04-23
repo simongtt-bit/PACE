@@ -21,18 +21,49 @@ public sealed class TyreAnalysisService
 
         if (validTemps.Count == 0)
         {
-            return "No tyre temperature data available yet.";
+            return "No tyre data yet.";
         }
 
         var hottest = validTemps.OrderByDescending(x => x.Value).First();
         var coolest = validTemps.OrderBy(x => x.Value).First();
         var spread = hottest.Value - coolest.Value;
+        var average = validTemps.Average(x => x.Value);
+
+        // 🔥 Engineer-style interpretation
+
+        if (average < 50)
+        {
+            return "Tyres are still coming up to temperature.";
+        }
 
         if (spread < 3)
         {
-            return $"Tyres look stable. Hottest is {hottest.Key} at {hottest.Value:F1}°C.";
+            return $"Tyres look consistent. Hottest is {hottest.Key} at {hottest.Value:F1} degrees.";
         }
 
-        return $"{hottest.Key} is hottest at {hottest.Value:F1}°C. Temperature spread is {spread:F1}°C across the car.";
+        if (spread < 10)
+        {
+            return $"{hottest.Key} is slightly hotter. Balance looks okay.";
+        }
+
+        // High spread = imbalance
+        var bias = GetBias(hottest.Key);
+
+        return $"{hottest.Key} is running hot at {hottest.Value:F1} degrees. You're loading the {bias} more.";
+    }
+
+    private static string GetBias(string tyre)
+    {
+        if (tyre.Contains("Front"))
+        {
+            return "front tyres";
+        }
+
+        if (tyre.Contains("Rear"))
+        {
+            return "rear tyres";
+        }
+
+        return "car";
     }
 }

@@ -8,8 +8,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dfc5dbd4-95b1-42fa-8ad8-806e77d9be24" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/Services/AzureSpeechOptions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/Services/SpeechService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.PACE/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.PACE/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/MainWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/MainWindow.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pace.Engineer.Analysis/Services/EngineerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.Analysis/Services/EngineerService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pace.Engineer.Analysis/Services/TyreAnalysisService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.Analysis/Services/TyreAnalysisService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/App.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/App.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/Pace.Engineer.App.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/Pace.Engineer.App.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/ViewModels/MainWindowViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/ViewModels/MainWindowViewModel.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -22,6 +28,13 @@
   </component>
   <component name="EmbeddingIndexingInfo">
     <option name="cachedIndexableFilesCount" value="1" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JSON File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -39,6 +52,7 @@
   }
 }]]></component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/69c6d85332afabffd82bf34bfe4f954c65bbebc1428caa5311958a13399a50/FileConfigurationProvider.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.AI/Class1.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Analysis.Tests/UnitTest1.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Analysis/Services/EngineerService.cs" root0="FORCE_HIGHLIGHTING" />
@@ -46,7 +60,9 @@
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Analysis/Services/PaceAnalysisService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Analysis/Services/TyreAnalysisService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/Debugging/FakeTelemetrySource.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/Services/AzureSpeechOptions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/Services/SessionSnapshotPublisher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/Services/SpeechService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/ViewModels/MainWindowViewModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.App/ViewModels/RelayCommand.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Core.Tests/UnitTest1.cs" root0="FORCE_HIGHLIGHTING" />
@@ -139,7 +155,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1776945401829</updated>
-      <workItem from="1776945403734" duration="4529000" />
+      <workItem from="1776945403734" duration="7716000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize solution with .NET 8 projects, WPF application, and unit test projects.">
       <option name="closed" value="true" />
@@ -181,7 +197,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776949614935</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Enhance WPF UI with engineer question context, response details, and severity indicators; refine session snapshot handling.">
+      <option name="closed" value="true" />
+      <created>1776950272261</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1776950272261</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -196,7 +220,8 @@
     <MESSAGE value="Introduce Assetto Corsa telemetry integration with shared memory handling and connection monitoring." />
     <MESSAGE value="Introduce engineering analysis services for fuel, tyre, and pace insights alongside WPF UI updates for telemetry querying and responses." />
     <MESSAGE value="Refactor WPF view models, improve telemetry log updates, and enhance lap comparison messaging." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor WPF view models, improve telemetry log updates, and enhance lap comparison messaging." />
+    <MESSAGE value="Enhance WPF UI with engineer question context, response details, and severity indicators; refine session snapshot handling." />
+    <option name="LAST_COMMIT_MESSAGE" value="Enhance WPF UI with engineer question context, response details, and severity indicators; refine session snapshot handling." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -213,6 +238,19 @@
           <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
           <option name="timeStamp" value="3" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Pace.Engineer.App/Services/SpeechService.cs</url>
+          <line>16</line>
+          <properties documentPath="C:\Users\Simon\RiderProjects\PACE\Pace.Engineer.App\Services\SpeechService.cs" containingFunctionPresentation="Constructor 'SpeechService'">
+            <startOffsets>
+              <option value="480" />
+            </startOffsets>
+            <endOffsets>
+              <option value="481" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
