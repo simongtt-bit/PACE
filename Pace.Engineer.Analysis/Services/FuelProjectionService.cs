@@ -21,7 +21,7 @@ public sealed class FuelProjectionService
 
     public double? EstimateLapsRemaining(double fuelLitresRemaining)
     {
-        if (_recentLapConsumption.Count < 2)
+        if (_recentLapConsumption.Count < 1)
         {
             return null;
         }

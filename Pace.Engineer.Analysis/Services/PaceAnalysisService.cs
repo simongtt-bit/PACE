@@ -64,20 +64,25 @@ public sealed class PaceAnalysisService
         return "Pace looks steady.";
     }
 
-    public string BuildBestComparison(TimeSpan? currentLap, TimeSpan? bestLap)
+    public string BuildBestComparison(TimeSpan? lastLap, TimeSpan? bestLap)
     {
-        if (currentLap is null || bestLap is null)
+        if (lastLap is null || bestLap is null)
         {
-            return "I do not have enough data to compare this lap to your best yet.";
+            return "I do not have enough completed lap data to compare against your best yet.";
         }
 
-        var delta = currentLap.Value - bestLap.Value;
+        var delta = lastLap.Value - bestLap.Value;
+
+        if (Math.Abs(delta.TotalMilliseconds) < 100)
+        {
+            return "Your last lap matched your best lap almost exactly.";
+        }
 
         if (delta < TimeSpan.Zero)
         {
-            return $"This lap is currently {Math.Abs(delta.TotalSeconds):F2}s faster than your best reference.";
+            return $"Your last lap was {Math.Abs(delta.TotalSeconds):F2}s faster than your previous best.";
         }
 
-        return $"This lap is currently {delta.TotalSeconds:F2}s slower than your best reference.";
+        return $"Your last lap was {delta.TotalSeconds:F2}s slower than your best lap.";
     }
 }

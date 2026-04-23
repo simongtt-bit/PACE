@@ -36,7 +36,7 @@ public sealed class EngineerService
             EngineerQuestionType.Fuel => BuildFuelAnswer(snapshot),
             EngineerQuestionType.Tyres => _tyreAnalysisService.BuildTyreSummary(snapshot.Tyres),
             EngineerQuestionType.Pace => _paceAnalysisService.BuildPaceSummary(snapshot.LastLapTime, snapshot.BestLapTime),
-            EngineerQuestionType.CompareToBest => _paceAnalysisService.BuildBestComparison(snapshot.CurrentLapTime, snapshot.BestLapTime),
+            EngineerQuestionType.CompareToBest => _paceAnalysisService.BuildBestComparison(snapshot.LastLapTime, snapshot.BestLapTime),
             _ => "I do not have an answer for that yet."
         };
 

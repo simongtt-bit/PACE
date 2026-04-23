@@ -72,29 +72,143 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
 
     public ObservableCollection<string> Logs { get; } = [];
 
-    public string Status { get => _status; set => SetField(ref _status, value); }
-    public string Simulator { get => _simulator; set => SetField(ref _simulator, value); }
-    public string TrackName { get => _trackName; set => SetField(ref _trackName, value); }
-    public string CarName { get => _carName; set => SetField(ref _carName, value); }
-    public string SessionType { get => _sessionType; set => SetField(ref _sessionType, value); }
-    public int LapNumber { get => _lapNumber; set => SetField(ref _lapNumber, value); }
-    public int SectorNumber { get => _sectorNumber; set => SetField(ref _sectorNumber, value); }
-    public string CurrentLap { get => _currentLap; set => SetField(ref _currentLap, value); }
-    public string LastLap { get => _lastLap; set => SetField(ref _lastLap, value); }
-    public string BestLap { get => _bestLap; set => SetField(ref _bestLap, value); }
-    public string Delta { get => _delta; set => SetField(ref _delta, value); }
-    public double SpeedKph { get => _speedKph; set => SetField(ref _speedKph, value); }
-    public int Gear { get => _gear; set => SetField(ref _gear, value); }
-    public double Rpm { get => _rpm; set => SetField(ref _rpm, value); }
-    public double ThrottlePercent { get => _throttlePercent; set => SetField(ref _throttlePercent, value); }
-    public double BrakePercent { get => _brakePercent; set => SetField(ref _brakePercent, value); }
-    public double FuelLitres { get => _fuelLitres; set => SetField(ref _fuelLitres, value); }
-    public double? LapsRemaining { get => _lapsRemaining; set => SetField(ref _lapsRemaining, value); }
-    public double? FrontLeftTemp { get => _frontLeftTemp; set => SetField(ref _frontLeftTemp, value); }
-    public double? FrontRightTemp { get => _frontRightTemp; set => SetField(ref _frontRightTemp, value); }
-    public double? RearLeftTemp { get => _rearLeftTemp; set => SetField(ref _rearLeftTemp, value); }
-    public double? RearRightTemp { get => _rearRightTemp; set => SetField(ref _rearRightTemp, value); }
-    public string EngineerResponse { get => _engineerResponse; set => SetField(ref _engineerResponse, value); }
+    public string Status
+    {
+        get => _status;
+        set => SetField(ref _status, value);
+    }
+
+    public string Simulator
+    {
+        get => _simulator;
+        set => SetField(ref _simulator, value);
+    }
+
+    public string TrackName
+    {
+        get => _trackName;
+        set => SetField(ref _trackName, value);
+    }
+
+    public string CarName
+    {
+        get => _carName;
+        set => SetField(ref _carName, value);
+    }
+
+    public string SessionType
+    {
+        get => _sessionType;
+        set => SetField(ref _sessionType, value);
+    }
+
+    public int LapNumber
+    {
+        get => _lapNumber;
+        set => SetField(ref _lapNumber, value);
+    }
+
+    public int SectorNumber
+    {
+        get => _sectorNumber;
+        set => SetField(ref _sectorNumber, value);
+    }
+
+    public string CurrentLap
+    {
+        get => _currentLap;
+        set => SetField(ref _currentLap, value);
+    }
+
+    public string LastLap
+    {
+        get => _lastLap;
+        set => SetField(ref _lastLap, value);
+    }
+
+    public string BestLap
+    {
+        get => _bestLap;
+        set => SetField(ref _bestLap, value);
+    }
+
+    public string Delta
+    {
+        get => _delta;
+        set => SetField(ref _delta, value);
+    }
+
+    public double SpeedKph
+    {
+        get => _speedKph;
+        set => SetField(ref _speedKph, value);
+    }
+
+    public int Gear
+    {
+        get => _gear;
+        set => SetField(ref _gear, value);
+    }
+
+    public double Rpm
+    {
+        get => _rpm;
+        set => SetField(ref _rpm, value);
+    }
+
+    public double ThrottlePercent
+    {
+        get => _throttlePercent;
+        set => SetField(ref _throttlePercent, value);
+    }
+
+    public double BrakePercent
+    {
+        get => _brakePercent;
+        set => SetField(ref _brakePercent, value);
+    }
+
+    public double FuelLitres
+    {
+        get => _fuelLitres;
+        set => SetField(ref _fuelLitres, value);
+    }
+
+    public double? LapsRemaining
+    {
+        get => _lapsRemaining;
+        set => SetField(ref _lapsRemaining, value);
+    }
+
+    public double? FrontLeftTemp
+    {
+        get => _frontLeftTemp;
+        set => SetField(ref _frontLeftTemp, value);
+    }
+
+    public double? FrontRightTemp
+    {
+        get => _frontRightTemp;
+        set => SetField(ref _frontRightTemp, value);
+    }
+
+    public double? RearLeftTemp
+    {
+        get => _rearLeftTemp;
+        set => SetField(ref _rearLeftTemp, value);
+    }
+
+    public double? RearRightTemp
+    {
+        get => _rearRightTemp;
+        set => SetField(ref _rearRightTemp, value);
+    }
+
+    public string EngineerResponse
+    {
+        get => _engineerResponse;
+        set => SetField(ref _engineerResponse, value);
+    }
 
     public ICommand AskFuelCommand { get; }
     public ICommand AskTyresCommand { get; }
@@ -153,9 +267,6 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
             RearLeftTemp = snapshot.Tyres.RearLeft.TemperatureCelsius;
             RearRightTemp = snapshot.Tyres.RearRight.TemperatureCelsius;
 
-            Logs.Insert(0,
-                $"{snapshot.TimestampUtc:HH:mm:ss} | Lap {snapshot.LapNumber} | S{snapshot.SectorNumber} | {snapshot.SpeedKph:F0} kph");
-
             TrimLogs();
         });
     }
@@ -174,13 +285,15 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
             return;
         }
 
+        double? litresUsed = null;
+
         if (_lastLapFuelAtStart.HasValue)
         {
-            var litresUsed = _lastLapFuelAtStart.Value - snapshot.FuelLitresRemaining;
+            litresUsed = _lastLapFuelAtStart.Value - snapshot.FuelLitresRemaining;
 
             if (litresUsed > 0)
             {
-                _fuelProjectionService.RecordLapConsumption(litresUsed);
+                _fuelProjectionService.RecordLapConsumption(litresUsed.Value);
             }
         }
 
@@ -217,6 +330,19 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
             IsValidLap = snapshot.IsValidLap,
             TelemetrySource = snapshot.TelemetrySource
         };
+
+        var lapTimeText = snapshot.LastLapTime.HasValue
+            ? FormatLapTime(snapshot.LastLapTime)
+            : "-";
+
+        var fuelText = litresUsed.HasValue && litresUsed.Value > 0
+            ? $"{litresUsed.Value:F2}L used"
+            : "fuel usage unavailable";
+
+        Logs.Insert(0,
+            $"{snapshot.TimestampUtc:HH:mm:ss} | Completed lap {snapshot.LapNumber - 1} | Lap time {lapTimeText} | {fuelText}");
+
+        TrimLogs();
 
         _lastProcessedLapNumber = snapshot.LapNumber;
         _lastLapFuelAtStart = snapshot.FuelLitresRemaining;
