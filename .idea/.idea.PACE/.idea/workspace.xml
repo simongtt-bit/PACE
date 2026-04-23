@@ -8,15 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dfc5dbd4-95b1-42fa-8ad8-806e77d9be24" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/Services/AzureSpeechOptions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/Services/SpeechService.cs" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/Pace.Engineer.App/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.PACE/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.PACE/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.Analysis/Services/EngineerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.Analysis/Services/EngineerService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.Analysis/Services/TyreAnalysisService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.Analysis/Services/TyreAnalysisService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/App.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/App.xaml.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/Pace.Engineer.App.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/Pace.Engineer.App.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/ViewModels/MainWindowViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/ViewModels/MainWindowViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pace.Engineer.App/Services/SpeechService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Pace.Engineer.App/Services/SpeechService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +47,7 @@
   }
 }]]></component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/85f04ba8fb1a46b592f13a123b1512763ae48/7c/a624051e/SpeechSynthesizer.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/69c6d85332afabffd82bf34bfe4f954c65bbebc1428caa5311958a13399a50/FileConfigurationProvider.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.AI/Class1.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Pace.Engineer.Analysis.Tests/UnitTest1.cs" root0="FORCE_HIGHLIGHTING" />
@@ -113,6 +109,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "XThreadsFramesViewSplitterKey": "0.87829614",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "master",
     "junie.onboarding.icon.badge.shown": "true",
@@ -155,7 +152,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1776945401829</updated>
-      <workItem from="1776945403734" duration="7716000" />
+      <workItem from="1776945403734" duration="8396000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize solution with .NET 8 projects, WPF application, and unit test projects.">
       <option name="closed" value="true" />
@@ -205,7 +202,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776950272261</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Add Azure Cognitive Services speech integration, enhance tyre analysis responses, and implement WPF UI speech output.">
+      <option name="closed" value="true" />
+      <created>1776957880250</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1776957880250</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -221,7 +226,8 @@
     <MESSAGE value="Introduce engineering analysis services for fuel, tyre, and pace insights alongside WPF UI updates for telemetry querying and responses." />
     <MESSAGE value="Refactor WPF view models, improve telemetry log updates, and enhance lap comparison messaging." />
     <MESSAGE value="Enhance WPF UI with engineer question context, response details, and severity indicators; refine session snapshot handling." />
-    <option name="LAST_COMMIT_MESSAGE" value="Enhance WPF UI with engineer question context, response details, and severity indicators; refine session snapshot handling." />
+    <MESSAGE value="Add Azure Cognitive Services speech integration, enhance tyre analysis responses, and implement WPF UI speech output." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add Azure Cognitive Services speech integration, enhance tyre analysis responses, and implement WPF UI speech output." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -238,19 +244,6 @@
           <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
           <option name="timeStamp" value="3" />
         </breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Pace.Engineer.App/Services/SpeechService.cs</url>
-          <line>16</line>
-          <properties documentPath="C:\Users\Simon\RiderProjects\PACE\Pace.Engineer.App\Services\SpeechService.cs" containingFunctionPresentation="Constructor 'SpeechService'">
-            <startOffsets>
-              <option value="480" />
-            </startOffsets>
-            <endOffsets>
-              <option value="481" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

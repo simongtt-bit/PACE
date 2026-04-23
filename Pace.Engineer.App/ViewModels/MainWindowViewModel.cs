@@ -226,7 +226,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    private async Task AskQuestion(EngineerQuestionType questionType)
+    private async void AskQuestion(EngineerQuestionType questionType)
     {
         var response = _engineerService.Answer(_currentSnapshot, questionType);
 
@@ -243,10 +243,10 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         ResponseTimestamp = response.TimestampUtc.ToLocalTime().ToString("HH:mm:ss");
         ResponseSeverity = InferSeverity(response.Message);
 
-        await _speechService.SpeakAsync(response.Message);
-
         Logs.Insert(0, $"{response.TimestampUtc:HH:mm:ss} | PACE | {response.Message}");
         TrimLogs();
+
+        await _speechService.SpeakAsync(response.Message);
     }
 
     private void OnConnectionStateChanged(object? sender, TelemetryConnectionState state)
