@@ -25,6 +25,15 @@ public static class EngineerClipMappings
             EngineerClip.FuelToEnd => "acknowledge/fuel_to_end",
 
             // --------------------------------------
+            // Lap remaining fragments
+            // --------------------------------------
+            EngineerClip.OneLapRemaining => "fuel/one_lap_fuel",
+            EngineerClip.TwoLapsRemaining => "fuel/two_laps_fuel",
+            EngineerClip.ThreeLapsRemaining => "fuel/three_laps_fuel",
+            EngineerClip.FourLapsRemaining => "fuel/four_laps_fuel",
+            EngineerClip.FiveLapsRemaining => "fuel/five_laps_fuel",
+
+            // --------------------------------------
             // Battery
             // --------------------------------------
             EngineerClip.LowBattery => "battery/low_battery",
@@ -75,7 +84,11 @@ public static class EngineerClipMappings
             // --------------------------------------
             // Fallback (IMPORTANT)
             // --------------------------------------
-            _ => "acknowledge/ok",
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(clip),
+                clip,
+                $"No folder mapping exists for engineer clip '{clip}'."
+            ),
         };
 
 #if DEBUG
