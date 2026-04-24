@@ -11,7 +11,8 @@ public sealed class EngineerService
     public EngineerService(
         FuelProjectionService fuelProjectionService,
         TyreAnalysisService tyreAnalysisService,
-        PaceAnalysisService paceAnalysisService)
+        PaceAnalysisService paceAnalysisService
+    )
     {
         _fuelProjectionService = fuelProjectionService;
         _tyreAnalysisService = tyreAnalysisService;
@@ -22,50 +23,113 @@ public sealed class EngineerService
     {
         if (snapshot is null)
         {
-            return new EngineerResponse
-            {
-                QuestionType = questionType,
-                Message = "No telemetry available yet.",
-                TimestampUtc = DateTimeOffset.UtcNow
-            };
+            return EngineerResponse.Create(
+                questionType,
+                "No telemetry available yet.",
+                EngineerClip.NoTelemetry,
+                EngineerAudioPriority.Low,
+                EngineerResponseSeverity.Caution
+            );
         }
 
-        var message = questionType switch
+        return questionType switch
         {
-            EngineerQuestionType.Fuel => BuildFuelAnswer(snapshot),
-            EngineerQuestionType.Tyres => _tyreAnalysisService.BuildTyreSummary(snapshot.Tyres),
-            EngineerQuestionType.Pace => _paceAnalysisService.BuildPaceSummary(snapshot.LastLapTime, snapshot.BestLapTime),
-            EngineerQuestionType.CompareToBest => _paceAnalysisService.BuildBestComparison(snapshot.LastLapTime, snapshot.BestLapTime),
-            _ => "I do not have an answer for that yet."
-        };
+            EngineerQuestionType.Fuel => BuildFuelAnswer(snapshot, questionType),
 
-        return new EngineerResponse
-        {
-            QuestionType = questionType,
-            Message = message,
-            TimestampUtc = DateTimeOffset.UtcNow
+            EngineerQuestionType.Tyres => EngineerResponse.Create(
+                questionType,
+                _tyreAnalysisService.BuildTyreSummary(snapshot.Tyres),
+                EngineerClip.AcknowledgeOk,
+                EngineerAudioPriority.Low,
+                EngineerResponseSeverity.Info
+            ),
+
+            EngineerQuestionType.Pace => EngineerResponse.Create(
+                questionType,
+                _paceAnalysisService.BuildPaceSummary(snapshot.LastLapTime, snapshot.BestLapTime),
+                EngineerClip.AcknowledgeOk,
+                EngineerAudioPriority.Low,
+                EngineerResponseSeverity.Info
+            ),
+
+            EngineerQuestionType.CompareToBest => EngineerResponse.Create(
+                questionType,
+                _paceAnalysisService.BuildBestComparison(
+                    snapshot.LastLapTime,
+                    snapshot.BestLapTime
+                ),
+                EngineerClip.AcknowledgeOk,
+                EngineerAudioPriority.Medium,
+                EngineerResponseSeverity.Info
+            ),
+
+            _ => EngineerResponse.Create(
+                questionType,
+                "I do not have an answer for that yet.",
+                null,
+                EngineerAudioPriority.Low,
+                EngineerResponseSeverity.Info
+            ),
         };
     }
 
-    private string BuildFuelAnswer(SessionSnapshot snapshot)
+    private EngineerResponse BuildFuelAnswer(
+        SessionSnapshot snapshot,
+        EngineerQuestionType questionType
+    )
     {
         var lapsRemaining = snapshot.EstimatedLapsRemaining;
 
         if (lapsRemaining is null)
         {
-            return "Not enough data for a fuel estimate yet.";
+            return EngineerResponse.Create(
+                questionType,
+                "Not enough data for a fuel estimate yet.",
+                EngineerClip.StandBy,
+                EngineerAudioPriority.Low,
+                EngineerResponseSeverity.Caution
+            );
         }
 
         if (lapsRemaining < 2)
         {
-            return $"Fuel is critical. Box this lap.";
+            return EngineerResponse.Create(
+                questionType,
+                "Fuel is critical. Box this lap.",
+                EngineerClip.FuelCriticalBoxThisLap,
+                EngineerAudioPriority.Critical,
+                EngineerResponseSeverity.Critical
+            );
         }
 
         if (lapsRemaining < 5)
         {
-            return $"Fuel is getting tight. You’ve got about {lapsRemaining.Value:F1} laps.";
+            return EngineerResponse.Create(
+                questionType,
+                $"Fuel will be tight. You’ve got about {lapsRemaining.Value:F1} laps.",
+                EngineerClip.FuelWillBeTight,
+                EngineerAudioPriority.High,
+                EngineerResponseSeverity.Warning
+            );
         }
 
-        return $"Fuel looks good. You’ve got about {lapsRemaining.Value:F1} laps left.";
+        if (lapsRemaining < 10)
+        {
+            return EngineerResponse.Create(
+                questionType,
+                $"Fuel should be okay. Around {lapsRemaining.Value:F1} laps remaining.",
+                EngineerClip.FuelShouldBeOk,
+                EngineerAudioPriority.Medium,
+                EngineerResponseSeverity.Info
+            );
+        }
+
+        return EngineerResponse.Create(
+            questionType,
+            $"Plenty of fuel. About {lapsRemaining.Value:F1} laps remaining.",
+            EngineerClip.PlentyOfFuel,
+            EngineerAudioPriority.Low,
+            EngineerResponseSeverity.Info
+        );
     }
 }

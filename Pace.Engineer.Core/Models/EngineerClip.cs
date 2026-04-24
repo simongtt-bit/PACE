@@ -7,6 +7,7 @@ public enum EngineerClip
     RadioCheck,
     StandBy,
     DidNotUnderstand,
+    NoTelemetry,
 
     FillTheTank,
     FuelToEnd,
@@ -43,5 +44,5 @@ public enum EngineerClip
     HotOilAndWater,
     LowFuelPressure,
     LowOilPressure,
-    Stalled
+    Stalled,
 }
