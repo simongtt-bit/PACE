@@ -18,6 +18,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     private readonly FuelProjectionService _fuelProjectionService;
     private readonly PaceAnalysisService _paceAnalysisService;
     private readonly IVoiceClipService _voiceClipService;
+    private readonly IEngineerClipResolver _clipResolver;
 
     private SessionSnapshot? _currentSnapshot;
     private int _lastProcessedLapNumber;
@@ -56,7 +57,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         EngineerService engineerService,
         FuelProjectionService fuelProjectionService,
         PaceAnalysisService paceAnalysisService,
-        IVoiceClipService voiceClipService)
+        IVoiceClipService voiceClipService, IEngineerClipResolver clipResolver)
     {
         _publisher = publisher;
         _connectionMonitor = connectionMonitor;
@@ -64,6 +65,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         _fuelProjectionService = fuelProjectionService;
         _paceAnalysisService = paceAnalysisService;
         _voiceClipService = voiceClipService;
+        _clipResolver = clipResolver;
 
         Status = connectionMonitor.Current.StatusMessage;
 
@@ -278,7 +280,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
 
     private async Task PlayResponseAudioAsync(EngineerQuestionType questionType, string message)
     {
-        var clip = ResolveClip(questionType, message);
+        var clip = _clipResolver.Resolve(questionType, message);
 
         if (clip is null)
         {
@@ -295,167 +297,6 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         }
 
         await _voiceClipService.PlayAsync(clip.Value);
-    }
-
-    private static EngineerClip? ResolveClip(EngineerQuestionType questionType, string message)
-    {
-        var text = message.ToLowerInvariant();
-
-        if (text.Contains("no telemetry available"))
-        {
-            return EngineerClip.StandBy;
-        }
-
-        if (text.Contains("not enough data"))
-        {
-            return EngineerClip.StandBy;
-        }
-
-        if (text.Contains("radio check"))
-        {
-            return EngineerClip.RadioCheck;
-        }
-
-        if (text.Contains("fill the tank"))
-        {
-            return EngineerClip.FillTheTank;
-        }
-
-        if (text.Contains("fuel to end"))
-        {
-            return EngineerClip.FuelToEnd;
-        }
-
-        if (text.Contains("fuel is critical"))
-        {
-            return EngineerClip.FuelCriticalBoxThisLap;
-        }
-
-        if (text.Contains("fuel is getting tight") || text.Contains("fuel is tight"))
-        {
-            return EngineerClip.FuelWillBeTight;
-        }
-
-        if (text.Contains("fuel looks good"))
-        {
-            return EngineerClip.FuelShouldBeOk;
-        }
-
-        if (text.Contains("plenty of fuel"))
-        {
-            return EngineerClip.PlentyOfFuel;
-        }
-
-        if (text.Contains("yellow flag"))
-        {
-            return EngineerClip.YellowFlag;
-        }
-
-        if (text.Contains("local yellow"))
-        {
-            return EngineerClip.LocalYellowAhead;
-        }
-
-        if (text.Contains("blue flag"))
-        {
-            return EngineerClip.BlueFlag;
-        }
-
-        if (text.Contains("black flag"))
-        {
-            return EngineerClip.BlackFlag;
-        }
-
-        if (text.Contains("clear to overtake"))
-        {
-            return EngineerClip.ClearToOvertake;
-        }
-
-        if (text.Contains("no damage"))
-        {
-            return EngineerClip.NoDamage;
-        }
-
-        if (text.Contains("left front puncture"))
-        {
-            return EngineerClip.LeftFrontPuncture;
-        }
-
-        if (text.Contains("right front puncture"))
-        {
-            return EngineerClip.RightFrontPuncture;
-        }
-
-        if (text.Contains("left rear puncture"))
-        {
-            return EngineerClip.LeftRearPuncture;
-        }
-
-        if (text.Contains("right rear puncture"))
-        {
-            return EngineerClip.RightRearPuncture;
-        }
-
-        if (text.Contains("minor aero damage"))
-        {
-            return EngineerClip.MinorAeroDamage;
-        }
-
-        if (text.Contains("severe aero damage"))
-        {
-            return EngineerClip.SevereAeroDamage;
-        }
-
-        if (text.Contains("busted engine"))
-        {
-            return EngineerClip.BustedEngine;
-        }
-
-        if (text.Contains("busted suspension"))
-        {
-            return EngineerClip.BustedSuspension;
-        }
-
-        if (text.Contains("busted transmission"))
-        {
-            return EngineerClip.BustedTransmission;
-        }
-
-        if (text.Contains("hot oil and water"))
-        {
-            return EngineerClip.HotOilAndWater;
-        }
-
-        if (text.Contains("hot oil"))
-        {
-            return EngineerClip.HotOil;
-        }
-
-        if (text.Contains("hot water"))
-        {
-            return EngineerClip.HotWater;
-        }
-
-        if (text.Contains("low fuel pressure"))
-        {
-            return EngineerClip.LowFuelPressure;
-        }
-
-        if (text.Contains("low oil pressure"))
-        {
-            return EngineerClip.LowOilPressure;
-        }
-
-        if (text.Contains("stalled"))
-        {
-            return EngineerClip.Stalled;
-        }
-
-        return questionType switch
-        {
-            EngineerQuestionType.Fuel => EngineerClip.FuelShouldBeOk,
-            _ => null
-        };
     }
 
     private void OnConnectionStateChanged(object? sender, TelemetryConnectionState state)

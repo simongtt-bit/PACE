@@ -1,4 +1,4 @@
-namespace Pace.Engineer.App.Services;
+namespace Pace.Engineer.Core.Models;
 
 public enum EngineerClip
 {

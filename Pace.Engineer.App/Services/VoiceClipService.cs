@@ -1,5 +1,6 @@
 using System.IO;
 using NAudio.Wave;
+using Pace.Engineer.Core.Models;
 
 namespace Pace.Engineer.App.Services;
 

@@ -37,6 +37,7 @@ public partial class App : Application
                 services.AddSingleton<PaceAnalysisService>();
                 services.AddSingleton<EngineerService>();
                 services.AddSingleton<IVoiceClipService, VoiceClipService>();
+                services.AddSingleton<IEngineerClipResolver, EngineerClipResolver>();
 
                 services.AddSingleton<MainWindowViewModel>();
                 services.AddSingleton<MainWindow>();

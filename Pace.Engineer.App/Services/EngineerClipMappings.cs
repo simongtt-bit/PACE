@@ -1,3 +1,5 @@
+using Pace.Engineer.Core.Models;
+
 namespace Pace.Engineer.App.Services;
 
 public static class EngineerClipMappings
