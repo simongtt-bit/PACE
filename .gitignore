@@ -1,6 +1,108 @@
+# =========================
+# Build / Output
+# =========================
 bin/
 obj/
-/packages/
+out/
+publish/
+TestResults/
+
+# =========================
+# Packages
+# =========================
+packages/
+*.nupkg
+*.snupkg
+
+# =========================
+# User-specific files
+# =========================
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+*.tlog
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Rider / JetBrains
+# =========================
+.idea/
+*.sln.iml
+*.iml
 riderModule.iml
+
+# Rider caches
+/.idea/
 /_ReSharper.Caches/
+_ReSharper*/
+*.DotSettings.user
+
+# =========================
+# Visual Studio
+# =========================
+.vs/
+*.vcxproj.user
+
+# =========================
+# .NET / Debugging
+# =========================
+*.pdb
+*.mdb
+*.cache
+*.ilk
+*.aps
+*.ncb
+*.opendb
+*.VC.db
+
+# =========================
+# Temporary files
+# =========================
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# =========================
+# App settings (optional)
+# =========================
+appsettings.Development.json
+appsettings.Local.json
+
+# =========================
+# Azure / Secrets (if used)
+# =========================
+secrets.json
+
+# =========================
+# Voice assets
+# =========================
+
+# Ignore zip archives
+*.zip
+
+# Specifically ensure this is ignored
 Pace.Engineer.App/Assets/Voice/voice.zip
+
+# DO NOT ignore wav (they are tracked by Git LFS)
+# *.wav  ❌ leave commented
+
+# =========================
+# Misc
+# =========================
+*.coverage
+*.coveragexml
+*.trx
