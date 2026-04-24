@@ -17,7 +17,8 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     private readonly EngineerService _engineerService;
     private readonly FuelProjectionService _fuelProjectionService;
     private readonly PaceAnalysisService _paceAnalysisService;
-    private readonly IVoiceClipService _voiceClipService;
+    private readonly IEngineerAudioService _audioService;
+
     private readonly IEngineerClipResolver _clipResolver;
 
     private SessionSnapshot? _currentSnapshot;
@@ -57,22 +58,24 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         EngineerService engineerService,
         FuelProjectionService fuelProjectionService,
         PaceAnalysisService paceAnalysisService,
-        IVoiceClipService voiceClipService, IEngineerClipResolver clipResolver)
+        IEngineerAudioService audioService
+    )
     {
         _publisher = publisher;
         _connectionMonitor = connectionMonitor;
         _engineerService = engineerService;
         _fuelProjectionService = fuelProjectionService;
         _paceAnalysisService = paceAnalysisService;
-        _voiceClipService = voiceClipService;
-        _clipResolver = clipResolver;
+        _audioService = audioService;
 
         Status = connectionMonitor.Current.StatusMessage;
 
         AskFuelCommand = new RelayCommand(_ => AskQuestion(EngineerQuestionType.Fuel));
         AskTyresCommand = new RelayCommand(_ => AskQuestion(EngineerQuestionType.Tyres));
         AskPaceCommand = new RelayCommand(_ => AskQuestion(EngineerQuestionType.Pace));
-        AskCompareToBestCommand = new RelayCommand(_ => AskQuestion(EngineerQuestionType.CompareToBest));
+        AskCompareToBestCommand = new RelayCommand(_ =>
+            AskQuestion(EngineerQuestionType.CompareToBest)
+        );
 
         _publisher.SnapshotReceived += OnSnapshotReceived;
         _connectionMonitor.ConnectionStateChanged += OnConnectionStateChanged;
@@ -260,43 +263,25 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
             var response = _engineerService.Answer(_currentSnapshot, questionType);
 
             EngineerResponse = response.Message;
-            ResponseSeverity = InferSeverity(response.Message);
+            ResponseSeverity = response.Severity.ToString();
             ResponseTimestamp = response.TimestampUtc.ToLocalTime().ToString("HH:mm:ss");
 
             Logs.Insert(0, $"{DateTime.Now:HH:mm:ss} | {questionType} | {response.Message}");
             TrimLogs();
 
-            await PlayResponseAudioAsync(questionType, response.Message);
+            if (response.Clip is not null)
+            {
+                await _audioService.QueueAsync(response.Clip.Value, response.Priority);
+            }
         }
         catch (Exception ex)
         {
-            EngineerResponse = "Audio playback failed.";
+            EngineerResponse = "Engineer response failed.";
             ResponseSeverity = "Warning";
             ResponseTimestamp = DateTime.Now.ToString("HH:mm:ss");
             Logs.Insert(0, $"{DateTime.Now:HH:mm:ss} | Error | {ex.Message}");
             TrimLogs();
         }
-    }
-
-    private async Task PlayResponseAudioAsync(EngineerQuestionType questionType, string message)
-    {
-        var clip = _clipResolver.Resolve(questionType, message);
-
-        if (clip is null)
-        {
-            Logs.Insert(0, $"{DateTime.Now:HH:mm:ss} | No voice clip mapped | {message}");
-            TrimLogs();
-            return;
-        }
-
-        if (!_voiceClipService.HasClip(clip.Value))
-        {
-            Logs.Insert(0, $"{DateTime.Now:HH:mm:ss} | Missing voice clip | {clip.Value}");
-            TrimLogs();
-            return;
-        }
-
-        await _voiceClipService.PlayAsync(clip.Value);
     }
 
     private void OnConnectionStateChanged(object? sender, TelemetryConnectionState state)
@@ -351,7 +336,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
                     IsInPitLane = snapshot.IsInPitLane,
                     IsOnTrack = snapshot.IsOnTrack,
                     IsValidLap = snapshot.IsValidLap,
-                    TelemetrySource = snapshot.TelemetrySource
+                    TelemetrySource = snapshot.TelemetrySource,
                 };
             }
 
@@ -439,19 +424,20 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
             IsInPitLane = snapshot.IsInPitLane,
             IsOnTrack = snapshot.IsOnTrack,
             IsValidLap = snapshot.IsValidLap,
-            TelemetrySource = snapshot.TelemetrySource
+            TelemetrySource = snapshot.TelemetrySource,
         };
 
-        var lapTimeText = snapshot.LastLapTime.HasValue
-            ? FormatLapTime(snapshot.LastLapTime)
-            : "-";
+        var lapTimeText = snapshot.LastLapTime.HasValue ? FormatLapTime(snapshot.LastLapTime) : "-";
 
-        var fuelText = litresUsed.HasValue && litresUsed.Value > 0
-            ? $"{litresUsed.Value:F2}L used"
-            : "fuel usage unavailable";
+        var fuelText =
+            litresUsed.HasValue && litresUsed.Value > 0
+                ? $"{litresUsed.Value:F2}L used"
+                : "fuel usage unavailable";
 
-        Logs.Insert(0,
-            $"{snapshot.TimestampUtc:HH:mm:ss} | Completed lap {snapshot.LapNumber - 1} | Lap time {lapTimeText} | {fuelText}");
+        Logs.Insert(
+            0,
+            $"{snapshot.TimestampUtc:HH:mm:ss} | Completed lap {snapshot.LapNumber - 1} | Lap time {lapTimeText} | {fuelText}"
+        );
 
         TrimLogs();
 

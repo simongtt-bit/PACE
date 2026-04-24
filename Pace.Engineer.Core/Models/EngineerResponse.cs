@@ -1,8 +1,9 @@
 namespace Pace.Engineer.Core.Models;
 
-public sealed class EngineerResponse
-{
-    public EngineerQuestionType QuestionType { get; init; }
-    public string Message { get; init; } = string.Empty;
-    public DateTimeOffset TimestampUtc { get; init; }
-}
+public sealed record EngineerResponse(
+    string Message,
+    EngineerClip? Clip,
+    EngineerAudioPriority Priority,
+    EngineerResponseSeverity Severity,
+    DateTime TimestampUtc
+);

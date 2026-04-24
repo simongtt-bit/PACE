@@ -20,28 +20,33 @@ public partial class App : Application
         base.OnStartup(e);
 
         _host = Host.CreateDefaultBuilder()
-            .ConfigureServices((context, services) =>
-            {
-                services.AddSingleton<AssettoCorsaTelemetrySource>();
+            .ConfigureServices(
+                (context, services) =>
+                {
+                    services.AddSingleton<AssettoCorsaTelemetrySource>();
 
-                services.AddSingleton<ILiveTelemetrySource>(sp =>
-                    sp.GetRequiredService<AssettoCorsaTelemetrySource>());
+                    services.AddSingleton<ILiveTelemetrySource>(sp =>
+                        sp.GetRequiredService<AssettoCorsaTelemetrySource>()
+                    );
 
-                services.AddSingleton<ITelemetryConnectionMonitor>(sp =>
-                    sp.GetRequiredService<AssettoCorsaTelemetrySource>());
+                    services.AddSingleton<ITelemetryConnectionMonitor>(sp =>
+                        sp.GetRequiredService<AssettoCorsaTelemetrySource>()
+                    );
 
-                services.AddSingleton<ISessionSnapshotPublisher, SessionSnapshotPublisher>();
+                    services.AddSingleton<ISessionSnapshotPublisher, SessionSnapshotPublisher>();
 
-                services.AddSingleton<FuelProjectionService>();
-                services.AddSingleton<TyreAnalysisService>();
-                services.AddSingleton<PaceAnalysisService>();
-                services.AddSingleton<EngineerService>();
-                services.AddSingleton<IVoiceClipService, VoiceClipService>();
-                services.AddSingleton<IEngineerClipResolver, EngineerClipResolver>();
+                    services.AddSingleton<FuelProjectionService>();
+                    services.AddSingleton<TyreAnalysisService>();
+                    services.AddSingleton<PaceAnalysisService>();
+                    services.AddSingleton<EngineerService>();
+                    services.AddSingleton<IVoiceClipService, VoiceClipService>();
+                    services.AddSingleton<IEngineerClipResolver, EngineerClipResolver>();
+                    services.AddSingleton<IEngineerAudioService, EngineerAudioService>();
 
-                services.AddSingleton<MainWindowViewModel>();
-                services.AddSingleton<MainWindow>();
-            })
+                    services.AddSingleton<MainWindowViewModel>();
+                    services.AddSingleton<MainWindow>();
+                }
+            )
             .Build();
 
         await _host.StartAsync();

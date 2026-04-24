@@ -1,5 +1,6 @@
 using System.IO;
 using NAudio.Wave;
+using Pace.Engineer.Core.Interfaces;
 using Pace.Engineer.Core.Models;
 
 namespace Pace.Engineer.App.Services;
@@ -9,7 +10,9 @@ public sealed class VoiceClipService : IVoiceClipService, IDisposable
     private readonly string _voiceRoot;
     private readonly SemaphoreSlim _lock = new(1, 1);
     private readonly Random _random = new();
-    private readonly Dictionary<string, List<string>> _clips = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, List<string>> _clips = new(
+        StringComparer.OrdinalIgnoreCase
+    );
 
     private WaveOutEvent? _waveOut;
     private AudioFileReader? _audioReader;
@@ -29,11 +32,15 @@ public sealed class VoiceClipService : IVoiceClipService, IDisposable
         if (!found)
         {
             throw new InvalidOperationException(
-                $"No clip files found for '{clip}' ({key}). Voice root: {_voiceRoot}");
+                $"No clip files found for '{clip}' ({key}). Voice root: {_voiceRoot}"
+            );
         }
     }
 
-    public async Task<bool> TryPlayAsync(EngineerClip clip, CancellationToken cancellationToken = default)
+    public async Task<bool> TryPlayAsync(
+        EngineerClip clip,
+        CancellationToken cancellationToken = default
+    )
     {
         var key = clip.ToFolderKey();
 
@@ -53,20 +60,25 @@ public sealed class VoiceClipService : IVoiceClipService, IDisposable
             _audioReader = new AudioFileReader(file);
 
             _playbackCompletionSource = new TaskCompletionSource<bool>(
-                TaskCreationOptions.RunContinuationsAsynchronously);
+                TaskCreationOptions.RunContinuationsAsynchronously
+            );
 
-            _waveOut = new WaveOutEvent
-            {
-                DesiredLatency = 80,
-                NumberOfBuffers = 2
-            };
+            _waveOut = new WaveOutEvent { DesiredLatency = 80, NumberOfBuffers = 2 };
 
             _waveOut.PlaybackStopped += OnPlaybackStopped;
             _waveOut.Init(_audioReader);
             _waveOut.Play();
 
-            await _playbackCompletionSource.Task.WaitAsync(cancellationToken);
-            return true;
+            try
+            {
+                await _playbackCompletionSource.Task.WaitAsync(cancellationToken);
+                return true;
+            }
+            catch (OperationCanceledException)
+            {
+                await StopInternalAsync();
+                throw;
+            }
         }
         finally
         {
@@ -80,9 +92,9 @@ public sealed class VoiceClipService : IVoiceClipService, IDisposable
         return _clips.TryGetValue(key, out var files) && files.Count > 0;
     }
 
-    public async Task StopAsync()
+    public async Task StopAsync(CancellationToken cancellationToken = default)
     {
-        await _lock.WaitAsync();
+        await _lock.WaitAsync(cancellationToken);
 
         try
         {
@@ -104,9 +116,7 @@ public sealed class VoiceClipService : IVoiceClipService, IDisposable
                 _waveOut.Stop();
             }
         }
-        catch
-        {
-        }
+        catch { }
 
         DisposePlayback();
         return Task.CompletedTask;
@@ -131,7 +141,13 @@ public sealed class VoiceClipService : IVoiceClipService, IDisposable
 
         var totalFiles = 0;
 
-        foreach (var directory in Directory.EnumerateDirectories(_voiceRoot, "*", SearchOption.AllDirectories))
+        foreach (
+            var directory in Directory.EnumerateDirectories(
+                _voiceRoot,
+                "*",
+                SearchOption.AllDirectories
+            )
+        )
         {
             var wavFiles = Directory
                 .EnumerateFiles(directory, "*.wav", SearchOption.TopDirectoryOnly)
@@ -162,12 +178,11 @@ public sealed class VoiceClipService : IVoiceClipService, IDisposable
             Console.WriteLine($"[Voice] Loaded: {relativePath} ({wavFiles.Count} files)");
         }
 
-        Console.WriteLine($"[Voice] Total clips loaded: {_clips.Count} folders, {totalFiles} files");
+        Console.WriteLine(
+            $"[Voice] Total clips loaded: {_clips.Count} folders, {totalFiles} files"
+        );
 
-        var sampleKeys = _clips.Keys
-            .OrderBy(x => x)
-            .Take(25)
-            .ToList();
+        var sampleKeys = _clips.Keys.OrderBy(x => x).Take(25).ToList();
 
         Console.WriteLine("[Voice] Sample keys:");
         foreach (var key in sampleKeys)

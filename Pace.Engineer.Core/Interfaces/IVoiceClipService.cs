@@ -1,11 +1,14 @@
 using Pace.Engineer.Core.Models;
 
-namespace Pace.Engineer.App.Services;
+namespace Pace.Engineer.Core.Interfaces;
 
 public interface IVoiceClipService
 {
     Task PlayAsync(EngineerClip clip, CancellationToken cancellationToken = default);
+
     Task<bool> TryPlayAsync(EngineerClip clip, CancellationToken cancellationToken = default);
+
     bool HasClip(EngineerClip clip);
-    Task StopAsync();
+
+    Task StopAsync(CancellationToken cancellationToken = default);
 }
