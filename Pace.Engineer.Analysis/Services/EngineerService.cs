@@ -66,7 +66,7 @@ public sealed class EngineerService
             _ => EngineerResponse.Create(
                 questionType,
                 "I do not have an answer for that yet.",
-                null,
+                (EngineerClip?)null,
                 EngineerAudioPriority.Low,
                 EngineerResponseSeverity.Info
             ),

@@ -1,18 +1,15 @@
 namespace Pace.Engineer.Core.Models;
 
-public sealed class EngineerResponse
+public sealed record EngineerResponse(
+    EngineerQuestionType QuestionType,
+    string Message,
+    IReadOnlyList<EngineerClip> Clips,
+    EngineerAudioPriority Priority,
+    EngineerResponseSeverity Severity,
+    DateTime TimestampUtc
+)
 {
-    public required EngineerQuestionType QuestionType { get; init; }
-
-    public required string Message { get; init; }
-
-    public EngineerClip? Clip { get; init; }
-
-    public EngineerAudioPriority Priority { get; init; } = EngineerAudioPriority.Medium;
-
-    public EngineerResponseSeverity Severity { get; init; } = EngineerResponseSeverity.Info;
-
-    public DateTimeOffset TimestampUtc { get; init; } = DateTimeOffset.UtcNow;
+    public EngineerClip? Clip => Clips.Count == 1 ? Clips[0] : null;
 
     public static EngineerResponse Create(
         EngineerQuestionType questionType,
@@ -22,14 +19,31 @@ public sealed class EngineerResponse
         EngineerResponseSeverity severity
     )
     {
-        return new EngineerResponse
-        {
-            QuestionType = questionType,
-            Message = message,
-            Clip = clip,
-            Priority = priority,
-            Severity = severity,
-            TimestampUtc = DateTimeOffset.UtcNow,
-        };
+        return new EngineerResponse(
+            questionType,
+            message,
+            clip is null ? Array.Empty<EngineerClip>() : [clip.Value],
+            priority,
+            severity,
+            DateTime.UtcNow
+        );
+    }
+
+    public static EngineerResponse CreateChain(
+        EngineerQuestionType questionType,
+        string message,
+        IReadOnlyList<EngineerClip> clips,
+        EngineerAudioPriority priority,
+        EngineerResponseSeverity severity
+    )
+    {
+        return new EngineerResponse(
+            questionType,
+            message,
+            clips,
+            priority,
+            severity,
+            DateTime.UtcNow
+        );
     }
 }

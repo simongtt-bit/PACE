@@ -1,253 +1,337 @@
-﻿<Window x:Class="Pace.Engineer.App.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="PACE Engineer"
-        Height="820"
-        Width="1300"
-        WindowStartupLocation="CenterScreen">
-    <Grid Margin="16">
+﻿<Window
+  x:Class="Pace.Engineer.App.MainWindow"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  Title="PACE Engineer"
+  Height="820"
+  Width="1300"
+  WindowStartupLocation="CenterScreen"
+>
+  <Grid Margin="16">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="16" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0" Padding="12" CornerRadius="8" Background="#FF1E1E1E">
+      <StackPanel>
+        <TextBlock Text="PACE Engineer" FontSize="28" FontWeight="Bold" Foreground="White" />
+        <TextBlock Text="{Binding Status}" Margin="0,6,0,0" FontSize="14" Foreground="#FFD0D0D0" />
+      </StackPanel>
+    </Border>
+
+    <Grid Grid.Row="2">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="2.2*" />
+        <ColumnDefinition Width="16" />
+        <ColumnDefinition Width="1.15*" />
+      </Grid.ColumnDefinitions>
+
+      <Grid Grid.Column="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="16" />
-            <RowDefinition Height="*" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="16" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="16" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="16" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="16" />
+          <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0"
-                Padding="12"
-                CornerRadius="8"
-                Background="#FF1E1E1E">
+        <UniformGrid Grid.Row="0" Columns="4">
+          <Border Margin="0,0,8,0" Padding="12" Background="#FFF4F4F4" CornerRadius="8">
             <StackPanel>
-                <TextBlock Text="PACE Engineer"
-                           FontSize="28"
-                           FontWeight="Bold"
-                           Foreground="White" />
-                <TextBlock Text="{Binding Status}"
-                           Margin="0,6,0,0"
-                           FontSize="14"
-                           Foreground="#FFD0D0D0" />
+              <TextBlock Text="Simulator" FontWeight="Bold" />
+              <TextBlock Text="{Binding Simulator}" FontSize="18" />
             </StackPanel>
-        </Border>
+          </Border>
 
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2.2*" />
-                <ColumnDefinition Width="16" />
-                <ColumnDefinition Width="1.15*" />
-            </Grid.ColumnDefinitions>
+          <Border Margin="0,0,8,0" Padding="12" Background="#FFF4F4F4" CornerRadius="8">
+            <StackPanel>
+              <TextBlock Text="Session" FontWeight="Bold" />
+              <TextBlock Text="{Binding SessionType}" FontSize="18" />
+            </StackPanel>
+          </Border>
 
-            <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="16" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="16" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="16" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="16" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+          <Border Margin="0,0,8,0" Padding="12" Background="#FFF4F4F4" CornerRadius="8">
+            <StackPanel>
+              <TextBlock Text="Track" FontWeight="Bold" />
+              <TextBlock Text="{Binding TrackName}" FontSize="18" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
 
-                <UniformGrid Grid.Row="0" Columns="4">
-                    <Border Margin="0,0,8,0" Padding="12" Background="#FFF4F4F4" CornerRadius="8">
-                        <StackPanel>
-                            <TextBlock Text="Simulator" FontWeight="Bold" />
-                            <TextBlock Text="{Binding Simulator}" FontSize="18" />
-                        </StackPanel>
-                    </Border>
+          <Border Padding="12" Background="#FFF4F4F4" CornerRadius="8">
+            <StackPanel>
+              <TextBlock Text="Car" FontWeight="Bold" />
+              <TextBlock Text="{Binding CarName}" FontSize="18" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+        </UniformGrid>
 
-                    <Border Margin="0,0,8,0" Padding="12" Background="#FFF4F4F4" CornerRadius="8">
-                        <StackPanel>
-                            <TextBlock Text="Session" FontWeight="Bold" />
-                            <TextBlock Text="{Binding SessionType}" FontSize="18" />
-                        </StackPanel>
-                    </Border>
+        <UniformGrid Grid.Row="2" Columns="4">
+          <Border Margin="0,0,8,0" Padding="12" Background="#FFEAF4FF" CornerRadius="8">
+            <StackPanel>
+              <TextBlock Text="Lap" FontWeight="Bold" />
+              <TextBlock Text="{Binding LapNumber}" FontSize="28" FontWeight="Bold" />
+            </StackPanel>
+          </Border>
 
-                    <Border Margin="0,0,8,0" Padding="12" Background="#FFF4F4F4" CornerRadius="8">
-                        <StackPanel>
-                            <TextBlock Text="Track" FontWeight="Bold" />
-                            <TextBlock Text="{Binding TrackName}" FontSize="18" TextWrapping="Wrap" />
-                        </StackPanel>
-                    </Border>
+          <Border Margin="0,0,8,0" Padding="12" Background="#FFEAF4FF" CornerRadius="8">
+            <StackPanel>
+              <TextBlock Text="Sector" FontWeight="Bold" />
+              <TextBlock Text="{Binding SectorNumber}" FontSize="28" FontWeight="Bold" />
+            </StackPanel>
+          </Border>
 
-                    <Border Padding="12" Background="#FFF4F4F4" CornerRadius="8">
-                        <StackPanel>
-                            <TextBlock Text="Car" FontWeight="Bold" />
-                            <TextBlock Text="{Binding CarName}" FontSize="18" TextWrapping="Wrap" />
-                        </StackPanel>
-                    </Border>
-                </UniformGrid>
+          <Border Margin="0,0,8,0" Padding="12" Background="#FFEAF4FF" CornerRadius="8">
+            <StackPanel>
+              <TextBlock Text="Speed" FontWeight="Bold" />
+              <TextBlock
+                Text="{Binding SpeedKph, StringFormat={}{0:F0} kph}"
+                FontSize="28"
+                FontWeight="Bold"
+              />
+            </StackPanel>
+          </Border>
 
-                <UniformGrid Grid.Row="2" Columns="4">
-                    <Border Margin="0,0,8,0" Padding="12" Background="#FFEAF4FF" CornerRadius="8">
-                        <StackPanel>
-                            <TextBlock Text="Lap" FontWeight="Bold" />
-                            <TextBlock Text="{Binding LapNumber}" FontSize="28" FontWeight="Bold" />
-                        </StackPanel>
-                    </Border>
+          <Border Padding="12" Background="#FFEAF4FF" CornerRadius="8">
+            <StackPanel>
+              <TextBlock Text="Gear" FontWeight="Bold" />
+              <TextBlock Text="{Binding Gear}" FontSize="28" FontWeight="Bold" />
+            </StackPanel>
+          </Border>
+        </UniformGrid>
 
-                    <Border Margin="0,0,8,0" Padding="12" Background="#FFEAF4FF" CornerRadius="8">
-                        <StackPanel>
-                            <TextBlock Text="Sector" FontWeight="Bold" />
-                            <TextBlock Text="{Binding SectorNumber}" FontSize="28" FontWeight="Bold" />
-                        </StackPanel>
-                    </Border>
+        <UniformGrid Grid.Row="4" Columns="4">
+          <Border Margin="0,0,8,0" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
+            <StackPanel>
+              <TextBlock Text="Current Lap" FontWeight="Bold" />
+              <TextBlock Text="{Binding CurrentLap}" FontSize="22" />
+            </StackPanel>
+          </Border>
 
-                    <Border Margin="0,0,8,0" Padding="12" Background="#FFEAF4FF" CornerRadius="8">
-                        <StackPanel>
-                            <TextBlock Text="Speed" FontWeight="Bold" />
-                            <TextBlock Text="{Binding SpeedKph, StringFormat={}{0:F0} kph}" FontSize="28"
-                                       FontWeight="Bold" />
-                        </StackPanel>
-                    </Border>
+          <Border Margin="0,0,8,0" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
+            <StackPanel>
+              <TextBlock Text="Last Lap" FontWeight="Bold" />
+              <TextBlock Text="{Binding LastLap}" FontSize="22" />
+            </StackPanel>
+          </Border>
 
-                    <Border Padding="12" Background="#FFEAF4FF" CornerRadius="8">
-                        <StackPanel>
-                            <TextBlock Text="Gear" FontWeight="Bold" />
-                            <TextBlock Text="{Binding Gear}" FontSize="28" FontWeight="Bold" />
-                        </StackPanel>
-                    </Border>
-                </UniformGrid>
+          <Border Margin="0,0,8,0" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
+            <StackPanel>
+              <TextBlock Text="Best Lap" FontWeight="Bold" />
+              <TextBlock Text="{Binding BestLap}" FontSize="22" />
+            </StackPanel>
+          </Border>
 
-                <UniformGrid Grid.Row="4" Columns="4">
-                    <Border Margin="0,0,8,0" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
-                        <StackPanel>
-                            <TextBlock Text="Current Lap" FontWeight="Bold" />
-                            <TextBlock Text="{Binding CurrentLap}" FontSize="22" />
-                        </StackPanel>
-                    </Border>
+          <Border Padding="12" Background="#FFF7F7F7" CornerRadius="8">
+            <StackPanel>
+              <TextBlock Text="Delta" FontWeight="Bold" />
+              <TextBlock Text="{Binding Delta}" FontSize="22" />
+            </StackPanel>
+          </Border>
+        </UniformGrid>
 
-                    <Border Margin="0,0,8,0" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
-                        <StackPanel>
-                            <TextBlock Text="Last Lap" FontWeight="Bold" />
-                            <TextBlock Text="{Binding LastLap}" FontSize="22" />
-                        </StackPanel>
-                    </Border>
+        <Grid Grid.Row="6">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="16" />
+            <ColumnDefinition Width="1*" />
+          </Grid.ColumnDefinitions>
 
-                    <Border Margin="0,0,8,0" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
-                        <StackPanel>
-                            <TextBlock Text="Best Lap" FontWeight="Bold" />
-                            <TextBlock Text="{Binding BestLap}" FontSize="22" />
-                        </StackPanel>
-                    </Border>
+          <Border Grid.Column="0" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
+            <StackPanel>
+              <TextBlock Text="Car State" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
+              <TextBlock
+                Text="{Binding ThrottlePercent, StringFormat=Throttle: {0:F0}%}"
+                FontSize="16"
+                Margin="0,0,0,6"
+              />
+              <TextBlock
+                Text="{Binding BrakePercent, StringFormat=Brake: {0:F0}%}"
+                FontSize="16"
+                Margin="0,0,0,6"
+              />
+              <TextBlock
+                Text="{Binding Rpm, StringFormat=RPM: {0:F0}}"
+                FontSize="16"
+                Margin="0,0,0,6"
+              />
+              <TextBlock
+                Text="{Binding FuelLitres, StringFormat=Fuel: {0:F1} L}"
+                FontSize="16"
+                Margin="0,0,0,6"
+              />
+              <TextBlock
+                Text="{Binding LapsRemaining, StringFormat=Estimated laps remaining: {0:F1}}"
+                FontSize="16"
+              />
+            </StackPanel>
+          </Border>
 
-                    <Border Padding="12" Background="#FFF7F7F7" CornerRadius="8">
-                        <StackPanel>
-                            <TextBlock Text="Delta" FontWeight="Bold" />
-                            <TextBlock Text="{Binding Delta}" FontSize="22" />
-                        </StackPanel>
-                    </Border>
-                </UniformGrid>
-
-                <Grid Grid.Row="6">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="16" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Border Grid.Column="0" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
-                        <StackPanel>
-                            <TextBlock Text="Car State" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
-                            <TextBlock Text="{Binding ThrottlePercent, StringFormat=Throttle: {0:F0}%}" FontSize="16"
-                                       Margin="0,0,0,6" />
-                            <TextBlock Text="{Binding BrakePercent, StringFormat=Brake: {0:F0}%}" FontSize="16"
-                                       Margin="0,0,0,6" />
-                            <TextBlock Text="{Binding Rpm, StringFormat=RPM: {0:F0}}" FontSize="16" Margin="0,0,0,6" />
-                            <TextBlock Text="{Binding FuelLitres, StringFormat=Fuel: {0:F1} L}" FontSize="16"
-                                       Margin="0,0,0,6" />
-                            <TextBlock Text="{Binding LapsRemaining, StringFormat=Estimated laps remaining: {0:F1}}"
-                                       FontSize="16" />
-                        </StackPanel>
-                    </Border>
-
-                    <Border Grid.Column="2" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
-                        <StackPanel>
-                            <TextBlock Text="Tyre Temperatures" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
-                            <TextBlock Text="{Binding FrontLeftTemp, StringFormat=Front Left: {0:F1} °C}" FontSize="16"
-                                       Margin="0,0,0,6" />
-                            <TextBlock Text="{Binding FrontRightTemp, StringFormat=Front Right: {0:F1} °C}"
-                                       FontSize="16" Margin="0,0,0,6" />
-                            <TextBlock Text="{Binding RearLeftTemp, StringFormat=Rear Left: {0:F1} °C}" FontSize="16"
-                                       Margin="0,0,0,6" />
-                            <TextBlock Text="{Binding RearRightTemp, StringFormat=Rear Right: {0:F1} °C}" FontSize="16" />
-                        </StackPanel>
-                    </Border>
-                </Grid>
-
-                <Border Grid.Row="8" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
-                    <StackPanel>
-                        <TextBlock Text="Ask PACE"
-                                   FontSize="20"
-                                   FontWeight="Bold"
-                                   Margin="0,0,0,12" />
-
-                        <WrapPanel Margin="0,0,0,12">
-                            <Button Content="How's fuel?"
-                                    Command="{Binding AskFuelCommand}"
-                                    Padding="12,8"
-                                    Margin="0,0,8,8" />
-                            <Button Content="How are the tyres?"
-                                    Command="{Binding AskTyresCommand}"
-                                    Padding="12,8"
-                                    Margin="0,0,8,8" />
-                            <Button Content="Am I improving?"
-                                    Command="{Binding AskPaceCommand}"
-                                    Padding="12,8"
-                                    Margin="0,0,8,8" />
-                            <Button Content="Compare to best lap"
-                                    Command="{Binding AskCompareToBestCommand}"
-                                    Padding="12,8"
-                                    Margin="0,0,8,8" />
-                        </WrapPanel>
-
-                        <Border Background="White" CornerRadius="6" Padding="12">
-                            <StackPanel>
-                                <DockPanel Margin="0,0,0,8">
-                                    <TextBlock Text="{Binding LastQuestionAsked}"
-                                               FontWeight="SemiBold"
-                                               FontSize="14"
-                                               DockPanel.Dock="Left" />
-                                    <TextBlock Text="{Binding ResponseTimestamp}"
-                                               HorizontalAlignment="Right"
-                                               Foreground="#666666" />
-                                </DockPanel>
-
-                                <TextBlock Text="{Binding EngineerResponse}"
-                                           FontSize="16"
-                                           TextWrapping="Wrap"
-                                           Margin="0,0,0,8" />
-
-                                <Border Background="#FFEAF4FF"
-                                        CornerRadius="4"
-                                        Padding="8,4"
-                                        HorizontalAlignment="Left">
-                                    <TextBlock Text="{Binding ResponseBadgeText}"
-                                               FontSize="12"
-                                               FontWeight="SemiBold" />
-                                </Border>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </Border>
-            </Grid>
-
-            <Border Grid.Column="2" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="12" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Text="Diagnostics Log"
-                               FontSize="18"
-                               FontWeight="Bold" />
-
-                    <ListBox Grid.Row="2"
-                             ItemsSource="{Binding Logs}" />
-                </Grid>
-            </Border>
+          <Border Grid.Column="2" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
+            <StackPanel>
+              <TextBlock
+                Text="Tyre Temperatures"
+                FontSize="18"
+                FontWeight="Bold"
+                Margin="0,0,0,10"
+              />
+              <TextBlock
+                Text="{Binding FrontLeftTemp, StringFormat=Front Left: {0:F1} °C}"
+                FontSize="16"
+                Margin="0,0,0,6"
+              />
+              <TextBlock
+                Text="{Binding FrontRightTemp, StringFormat=Front Right: {0:F1} °C}"
+                FontSize="16"
+                Margin="0,0,0,6"
+              />
+              <TextBlock
+                Text="{Binding RearLeftTemp, StringFormat=Rear Left: {0:F1} °C}"
+                FontSize="16"
+                Margin="0,0,0,6"
+              />
+              <TextBlock
+                Text="{Binding RearRightTemp, StringFormat=Rear Right: {0:F1} °C}"
+                FontSize="16"
+              />
+            </StackPanel>
+          </Border>
         </Grid>
+
+        <Border Grid.Row="8" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
+          <StackPanel>
+            <TextBlock Text="Ask PACE" FontSize="20" FontWeight="Bold" Margin="0,0,0,12" />
+
+            <WrapPanel Margin="0,0,0,12">
+              <Button
+                Content="How's fuel?"
+                Command="{Binding AskFuelCommand}"
+                Padding="12,8"
+                Margin="0,0,8,8"
+              />
+              <Button
+                Content="How are the tyres?"
+                Command="{Binding AskTyresCommand}"
+                Padding="12,8"
+                Margin="0,0,8,8"
+              />
+              <Button
+                Content="Am I improving?"
+                Command="{Binding AskPaceCommand}"
+                Padding="12,8"
+                Margin="0,0,8,8"
+              />
+              <Button
+                Content="Compare to best lap"
+                Command="{Binding AskCompareToBestCommand}"
+                Padding="12,8"
+                Margin="0,0,8,8"
+              />
+            </WrapPanel>
+
+            <TextBlock
+              Text="Dev audio tests"
+              FontSize="16"
+              FontWeight="SemiBold"
+              Margin="0,8,0,8"
+            />
+
+            <WrapPanel Margin="0,0,0,12">
+              <Button
+                Content="Test no telemetry"
+                Command="{Binding TestNoTelemetryCommand}"
+                Padding="12,8"
+                Margin="0,0,8,8"
+              />
+
+              <Button
+                Content="Test fuel critical"
+                Command="{Binding TestFuelCriticalCommand}"
+                Padding="12,8"
+                Margin="0,0,8,8"
+              />
+
+              <Button
+                Content="Test fuel tight chain"
+                Command="{Binding TestFuelTightCommand}"
+                Padding="12,8"
+                Margin="0,0,8,8"
+              />
+
+              <Button
+                Content="Test fuel OK chain"
+                Command="{Binding TestFuelOkCommand}"
+                Padding="12,8"
+                Margin="0,0,8,8"
+              />
+
+              <Button
+                Content="Test plenty fuel chain"
+                Command="{Binding TestPlentyFuelCommand}"
+                Padding="12,8"
+                Margin="0,0,8,8"
+              />
+            </WrapPanel>
+
+            <Border Background="White" CornerRadius="6" Padding="12">
+              <StackPanel>
+                <DockPanel Margin="0,0,0,8">
+                  <TextBlock
+                    Text="{Binding LastQuestionAsked}"
+                    FontWeight="SemiBold"
+                    FontSize="14"
+                    DockPanel.Dock="Left"
+                  />
+                  <TextBlock
+                    Text="{Binding ResponseTimestamp}"
+                    HorizontalAlignment="Right"
+                    Foreground="#666666"
+                  />
+                </DockPanel>
+
+                <TextBlock
+                  Text="{Binding EngineerResponse}"
+                  FontSize="16"
+                  TextWrapping="Wrap"
+                  Margin="0,0,0,8"
+                />
+
+                <Border
+                  Background="#FFEAF4FF"
+                  CornerRadius="4"
+                  Padding="8,4"
+                  HorizontalAlignment="Left"
+                >
+                  <TextBlock
+                    Text="{Binding ResponseBadgeText}"
+                    FontSize="12"
+                    FontWeight="SemiBold"
+                  />
+                </Border>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <Border Grid.Column="2" Padding="12" Background="#FFF7F7F7" CornerRadius="8">
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="12" />
+            <RowDefinition Height="*" />
+          </Grid.RowDefinitions>
+
+          <TextBlock Text="Diagnostics Log" FontSize="18" FontWeight="Bold" />
+
+          <ListBox Grid.Row="2" ItemsSource="{Binding Logs}" />
+        </Grid>
+      </Border>
     </Grid>
+  </Grid>
 </Window>

@@ -10,6 +10,8 @@ public interface IEngineerAudioService
         CancellationToken cancellationToken = default
     );
 
+    Task QueueAsync(EngineerResponse response, CancellationToken cancellationToken = default);
+
     Task StopAsync(CancellationToken cancellationToken = default);
 
     Task ClearQueueAsync(CancellationToken cancellationToken = default);

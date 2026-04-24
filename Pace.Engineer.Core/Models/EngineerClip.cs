@@ -2,6 +2,7 @@ namespace Pace.Engineer.Core.Models;
 
 public enum EngineerClip
 {
+    // Acknowledge
     AcknowledgeOk,
     AcknowledgeNo,
     RadioCheck,
@@ -9,25 +10,35 @@ public enum EngineerClip
     DidNotUnderstand,
     NoTelemetry,
 
+    // Fuel (primary)
     FillTheTank,
     FuelToEnd,
-
-    LowBattery,
-    CriticalBattery,
-    PlentyOfBattery,
-
     FuelCriticalBoxThisLap,
     FuelWillBeTight,
     FuelShouldBeOk,
     PlentyOfFuel,
     PitForFuel,
 
+    // Fuel (composable additions)
+    OneLapRemaining,
+    TwoLapsRemaining,
+    ThreeLapsRemaining,
+    FourLapsRemaining,
+    FiveLapsRemaining,
+
+    // Battery
+    LowBattery,
+    CriticalBattery,
+    PlentyOfBattery,
+
+    // Flags
     YellowFlag,
     LocalYellowAhead,
     BlueFlag,
     BlackFlag,
     ClearToOvertake,
 
+    // Damage
     NoDamage,
     LeftFrontPuncture,
     RightFrontPuncture,
@@ -39,6 +50,7 @@ public enum EngineerClip
     BustedSuspension,
     BustedTransmission,
 
+    // Engine / telemetry
     HotOil,
     HotWater,
     HotOilAndWater,

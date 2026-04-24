@@ -5,6 +5,8 @@ namespace Pace.Engineer.App.Services;
 
 public sealed class EngineerAudioService : IEngineerAudioService, IAsyncDisposable
 {
+    private const int ClipGapMilliseconds = 120;
+
     private readonly IVoiceClipService _voiceClipService;
     private readonly PriorityQueue<AudioRequest, AudioPriorityKey> _queue = new();
     private readonly SemaphoreSlim _signal = new(0);
@@ -28,29 +30,12 @@ public sealed class EngineerAudioService : IEngineerAudioService, IAsyncDisposab
         CancellationToken cancellationToken = default
     )
     {
-        cancellationToken.ThrowIfCancellationRequested();
+        return QueueAsync([clip], priority, cancellationToken);
+    }
 
-        EnsureWorkerStarted();
-
-        lock (_sync)
-        {
-            var request = new AudioRequest(clip, priority, ++_sequence);
-
-            _queue.Enqueue(
-                request,
-                new AudioPriorityKey(Priority: -(int)priority, Sequence: request.Sequence)
-            );
-
-            if (_currentPriority.HasValue && priority > _currentPriority.Value)
-            {
-                _currentPlaybackCts?.Cancel();
-                _ = _voiceClipService.StopAsync(CancellationToken.None);
-            }
-        }
-
-        _signal.Release();
-
-        return Task.CompletedTask;
+    public Task QueueAsync(EngineerResponse response, CancellationToken cancellationToken = default)
+    {
+        return QueueAsync(response.Clips, response.Priority, cancellationToken);
     }
 
     public async Task StopAsync(CancellationToken cancellationToken = default)
@@ -72,6 +57,46 @@ public sealed class EngineerAudioService : IEngineerAudioService, IAsyncDisposab
         {
             _queue.Clear();
         }
+
+        return Task.CompletedTask;
+    }
+
+    private Task QueueAsync(
+        IReadOnlyList<EngineerClip> clips,
+        EngineerAudioPriority priority,
+        CancellationToken cancellationToken
+    )
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (clips.Count == 0)
+        {
+            return Task.CompletedTask;
+        }
+
+        EnsureWorkerStarted();
+
+        lock (_sync)
+        {
+            var request = new AudioRequest(
+                Clips: clips.ToArray(),
+                Priority: priority,
+                Sequence: ++_sequence
+            );
+
+            _queue.Enqueue(
+                request,
+                new AudioPriorityKey(Priority: -(int)priority, Sequence: request.Sequence)
+            );
+
+            if (_currentPriority.HasValue && priority > _currentPriority.Value)
+            {
+                _currentPlaybackCts?.Cancel();
+                _ = _voiceClipService.StopAsync(CancellationToken.None);
+            }
+        }
+
+        _signal.Release();
 
         return Task.CompletedTask;
     }
@@ -98,27 +123,41 @@ public sealed class EngineerAudioService : IEngineerAudioService, IAsyncDisposab
                 await _signal.WaitAsync(_shutdownCts.Token);
 
                 AudioRequest? request = null;
+                CancellationTokenSource? playbackCts = null;
 
                 lock (_sync)
                 {
                     if (_queue.Count > 0)
                     {
                         request = _queue.Dequeue();
-                        _currentPriority = request.Priority;
-                        _currentPlaybackCts = CancellationTokenSource.CreateLinkedTokenSource(
+
+                        playbackCts = CancellationTokenSource.CreateLinkedTokenSource(
                             _shutdownCts.Token
                         );
+
+                        _currentPriority = request.Priority;
+                        _currentPlaybackCts = playbackCts;
                     }
                 }
 
-                if (request is null)
+                if (request is null || playbackCts is null)
                 {
                     continue;
                 }
 
                 try
                 {
-                    await _voiceClipService.PlayAsync(request.Clip, _currentPlaybackCts!.Token);
+                    foreach (var clip in request.Clips)
+                    {
+                        playbackCts.Token.ThrowIfCancellationRequested();
+
+                        await _voiceClipService.PlayAsync(clip, playbackCts.Token);
+
+                        if (clip != request.Clips[^1])
+                        {
+                            await Task.Delay(ClipGapMilliseconds, playbackCts.Token);
+                        }
+                    }
                 }
                 catch (OperationCanceledException)
                 {
@@ -128,10 +167,14 @@ public sealed class EngineerAudioService : IEngineerAudioService, IAsyncDisposab
                 {
                     lock (_sync)
                     {
-                        _currentPlaybackCts?.Dispose();
-                        _currentPlaybackCts = null;
-                        _currentPriority = null;
+                        if (_currentPlaybackCts == playbackCts)
+                        {
+                            _currentPlaybackCts = null;
+                            _currentPriority = null;
+                        }
                     }
+
+                    playbackCts.Dispose();
                 }
             }
             catch (OperationCanceledException)
@@ -156,12 +199,13 @@ public sealed class EngineerAudioService : IEngineerAudioService, IAsyncDisposab
             catch (OperationCanceledException) { }
         }
 
+        _currentPlaybackCts?.Dispose();
         _signal.Dispose();
         _shutdownCts.Dispose();
     }
 
     private sealed record AudioRequest(
-        EngineerClip Clip,
+        IReadOnlyList<EngineerClip> Clips,
         EngineerAudioPriority Priority,
         long Sequence
     );
