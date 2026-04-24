@@ -104,10 +104,10 @@ public sealed class EngineerService
 
         if (lapsRemaining < 5)
         {
-            return EngineerResponse.Create(
+            return EngineerResponse.CreateChain(
                 questionType,
                 $"Fuel will be tight. You’ve got about {lapsRemaining.Value:F1} laps.",
-                EngineerClip.FuelWillBeTight,
+                [EngineerClip.FuelWillBeTight, ToLapRemainingClip(lapsRemaining.Value)],
                 EngineerAudioPriority.High,
                 EngineerResponseSeverity.Warning
             );
@@ -115,21 +115,35 @@ public sealed class EngineerService
 
         if (lapsRemaining < 10)
         {
-            return EngineerResponse.Create(
+            return EngineerResponse.CreateChain(
                 questionType,
                 $"Fuel should be okay. Around {lapsRemaining.Value:F1} laps remaining.",
-                EngineerClip.FuelShouldBeOk,
+                [EngineerClip.FuelShouldBeOk, ToLapRemainingClip(lapsRemaining.Value)],
                 EngineerAudioPriority.Medium,
                 EngineerResponseSeverity.Info
             );
         }
 
-        return EngineerResponse.Create(
+        return EngineerResponse.CreateChain(
             questionType,
             $"Plenty of fuel. About {lapsRemaining.Value:F1} laps remaining.",
-            EngineerClip.PlentyOfFuel,
+            [EngineerClip.PlentyOfFuel, ToLapRemainingClip(lapsRemaining.Value)],
             EngineerAudioPriority.Low,
             EngineerResponseSeverity.Info
         );
+    }
+
+    private static EngineerClip ToLapRemainingClip(double lapsRemaining)
+    {
+        var rounded = (int)Math.Round(lapsRemaining, MidpointRounding.AwayFromZero);
+
+        return rounded switch
+        {
+            <= 1 => EngineerClip.OneLapRemaining,
+            2 => EngineerClip.TwoLapsRemaining,
+            3 => EngineerClip.ThreeLapsRemaining,
+            4 => EngineerClip.FourLapsRemaining,
+            _ => EngineerClip.FiveLapsRemaining,
+        };
     }
 }

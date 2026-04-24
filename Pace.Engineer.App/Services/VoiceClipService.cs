@@ -63,10 +63,14 @@ public sealed class VoiceClipService : IVoiceClipService, IDisposable
                 TaskCreationOptions.RunContinuationsAsynchronously
             );
 
-            _waveOut = new WaveOutEvent { DesiredLatency = 80, NumberOfBuffers = 2 };
+            _waveOut = new WaveOutEvent { DesiredLatency = 120, NumberOfBuffers = 3 };
 
             _waveOut.PlaybackStopped += OnPlaybackStopped;
             _waveOut.Init(_audioReader);
+
+            _audioReader.Position = 0;
+            await Task.Delay(40, cancellationToken);
+
             _waveOut.Play();
 
             try
