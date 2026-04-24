@@ -216,11 +216,6 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         set => SetField(ref _engineerResponse, value);
     }
 
-    public ICommand AskFuelCommand { get; }
-    public ICommand AskTyresCommand { get; }
-    public ICommand AskPaceCommand { get; }
-    public ICommand AskCompareToBestCommand { get; }
-
     public string LastQuestionAsked
     {
         get => _lastQuestionAsked;
@@ -236,35 +231,23 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     public string ResponseSeverity
     {
         get => _responseSeverity;
-        set => SetField(ref _responseSeverity, value);
+        set
+        {
+            if (SetField(ref _responseSeverity, value))
+            {
+                OnPropertyChanged(nameof(ResponseBadgeText));
+            }
+        }
     }
 
     public string ResponseBadgeText => ResponseSeverity;
 
+    public ICommand AskFuelCommand { get; }
+    public ICommand AskTyresCommand { get; }
+    public ICommand AskPaceCommand { get; }
+    public ICommand AskCompareToBestCommand { get; }
+
     public event PropertyChangedEventHandler? PropertyChanged;
-
-    private async Task TestEngineerClipAsync()
-    {
-        var clips = new[]
-        {
-            EngineerClip.RadioCheck,
-            EngineerClip.AcknowledgeOk,
-            EngineerClip.LowBattery,
-            EngineerClip.FuelWillBeTight,
-            EngineerClip.YellowFlag,
-            EngineerClip.NoDamage,
-            EngineerClip.HotOil
-        };
-
-        foreach (var clip in clips)
-        {
-            if (_voiceClipService.HasClip(clip))
-            {
-                await _voiceClipService.PlayAsync(clip);
-                await Task.Delay(400);
-            }
-        }
-    }
 
     private async void AskQuestion(EngineerQuestionType questionType)
     {
@@ -272,7 +255,6 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         {
             LastQuestionAsked = questionType.ToString();
 
-            await TestEngineerClipAsync();
             var response = _engineerService.Answer(_currentSnapshot, questionType);
 
             EngineerResponse = response.Message;
@@ -298,16 +280,36 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     {
         var clip = ResolveClip(questionType, message);
 
-        if (clip.HasValue && _voiceClipService.HasClip(clip.Value))
+        if (clip is null)
         {
-            await _voiceClipService.PlayAsync(clip.Value);
-            
+            Logs.Insert(0, $"{DateTime.Now:HH:mm:ss} | No voice clip mapped | {message}");
+            TrimLogs();
+            return;
         }
+
+        if (!_voiceClipService.HasClip(clip.Value))
+        {
+            Logs.Insert(0, $"{DateTime.Now:HH:mm:ss} | Missing voice clip | {clip.Value}");
+            TrimLogs();
+            return;
+        }
+
+        await _voiceClipService.PlayAsync(clip.Value);
     }
 
     private static EngineerClip? ResolveClip(EngineerQuestionType questionType, string message)
     {
         var text = message.ToLowerInvariant();
+
+        if (text.Contains("no telemetry available"))
+        {
+            return EngineerClip.StandBy;
+        }
+
+        if (text.Contains("not enough data"))
+        {
+            return EngineerClip.StandBy;
+        }
 
         if (text.Contains("radio check"))
         {
@@ -328,11 +330,6 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         {
             return EngineerClip.FuelCriticalBoxThisLap;
         }
-        
-        if (text.Contains("plenty of fuel"))
-        {
-            return EngineerClip.PlentyOfFuel;
-        }
 
         if (text.Contains("fuel is getting tight") || text.Contains("fuel is tight"))
         {
@@ -342,6 +339,11 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         if (text.Contains("fuel looks good"))
         {
             return EngineerClip.FuelShouldBeOk;
+        }
+
+        if (text.Contains("plenty of fuel"))
+        {
+            return EngineerClip.PlentyOfFuel;
         }
 
         if (text.Contains("yellow flag"))
@@ -451,7 +453,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
 
         return questionType switch
         {
-            EngineerQuestionType.Fuel when text.Contains("not enough data") => EngineerClip.StandBy,
+            EngineerQuestionType.Fuel => EngineerClip.FuelShouldBeOk,
             _ => null
         };
     }
@@ -651,14 +653,20 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         return $"{sign}{absolute:mm\\:ss\\.fff}";
     }
 
-    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value))
         {
-            return;
+            return false;
         }
 
         field = value;
+        OnPropertyChanged(propertyName);
+        return true;
+    }
+
+    private void OnPropertyChanged(string? propertyName)
+    {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
@@ -666,7 +674,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     {
         var text = message.ToLowerInvariant();
 
-        if (text.Contains("critical") || text.Contains("box soon"))
+        if (text.Contains("critical") || text.Contains("box this lap"))
         {
             return "Warning";
         }

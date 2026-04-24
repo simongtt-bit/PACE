@@ -43,6 +43,7 @@ desktop.ini
 *.sln.iml
 *.iml
 riderModule.iml
+.idea/workspace.xml
 
 # Rider caches
 /.idea/
